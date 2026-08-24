@@ -1,0 +1,77 @@
+generated: '2026-08-23'
+method: searched
+source: https://docs.kore.ai/ai-for-service/release-notes/deprecations
+versioning:
+  scheme: uri-path
+  current: v1
+  docs: https://github.com/Koredotcom/docs-v2/blob/main/agent-platform/drafts/api-reference/index.mdx
+  policy: >-
+    Agent Platform endpoints are versioned with an /api/v1/ prefix for core APIs, or scoped
+    under /api/projects/{projectId}/ for project-level resources. The provider states that
+    when breaking changes are introduced a new version prefix (for example /api/v2/) is
+    added and previous versions remain available during a documented deprecation window.
+    The length of that window is not stated.
+  product_versioning:
+    scheme: semver
+    current: v1.4.4
+    as_of: '2026-08-17'
+    note: The Agent Platform (Artemis) ships dated semver releases; see changelog/koreai-changelog.yml.
+  app_versioning_docs: https://docs.kore.ai/ai-for-service/deployment/app-versioning
+deprecation:
+  policy_url: https://docs.kore.ai/ai-for-service/release-notes/deprecations
+  sunset_header: false
+  deprecation_header: false
+  header_note: >-
+    No RFC 8594 Sunset header and no Deprecation header is documented on any Kore.ai
+    surface. Deprecation is communicated as a dated notice page and in release notes, not
+    in the response.
+  style: dated-notice-page
+  notices:
+  - item: ML network types MLP-BOW, MLP-WordEmbeddings, LSTM, CNN, Transformer, KAEN
+    removal_date: '2026-08-29'
+    action_required: >-
+      Migrate to a supported network (Standard, Multi-lingual, Zero-shot Model, Few-shot
+      Model) and retrain before the date, or the app stops functioning. After the date the
+      platform auto-migrates deprecated networks to the Few-shot Model paired with BGE-M3
+      and the app must be retrained to restore functionality.
+  - item: Embedding models Qwen2-7B-Instruct, LaBSE, MPNet
+    removal_date: '2026-08-29'
+    action_required: Migrate to Pre-trained MPNet or BGE-M3 before the date.
+  - item: Azure OpenAI gpt-4o v2024-05-13 / v2024-08-06 and gpt-4o-mini on Azure Standard deployments
+    removal_date: '2026-03-31'
+    upstream: true
+    action_required: >-
+      Upstream Microsoft retirement affecting Kore.ai customers using Custom Integration or
+      custom prompts. Auto-upgraded deployments now run gpt-5.1 / gpt-5-mini and custom
+      prompts must replace max_tokens with max_completion_tokens.
+  - item: Azure OpenAI Global Standard / Provisioned / Data Zone Standard deployments
+    removal_date: '2026-10-01'
+    upstream: true
+    action_required: Revisit before 1 October 2026.
+deprecated_operations:
+- openapi/koreai-abl-runtime-conversation-openapi.json#runtime.legacyChat.agent
+- openapi/koreai-abl-runtime-conversation-openapi.json#runtime.legacyChat.stream
+- openapi/koreai-abl-runtime-conversation-openapi.json#runtime.legacyChat.complete
+- openapi/koreai-abl-runtime-conversation-openapi.json#runtime.legacyChat.createSession
+deprecated_operations_note: >-
+  All four legacy chat operations carry deprecated: true in the published spec, with the
+  spec naming the deployment-scoped replacement
+  POST /api/v1/project/{projectSlug}/{env}/agent/{agentSlug}/chat.
+release_cadence:
+  ai_for_service: Every fifteen days, adjusted around holidays.
+  agent_platform: Dated major/minor/patch releases, roughly weekly through 2026.
+status_page:
+  url: https://status.kore.com/
+  probed_status: 200
+  note: >-
+    status.kore.ai resolves and redirects to status.kore.com, titled "Kore.ai Inc Status".
+    Note the .com host — a consumer following the .ai brand has to be redirected to find it.
+sla:
+  url: https://trust.kore.ai/
+  uptime_target: null
+  note: >-
+    An "Enterprise Service Level Agreement" document is listed on the Kore.ai trust center,
+    but the document itself is gated behind an NDA/request flow, so no uptime target is
+    published and none is asserted here.
+support_tiers:
+  note: The provider documents a support entry point at https://www.kore.ai/support. No public support SLA matrix was found.

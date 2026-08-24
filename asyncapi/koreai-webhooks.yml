@@ -1,0 +1,81 @@
+generated: '2026-08-23'
+method: searched
+source: https://docs.kore.ai/ai-for-service/apis/agent-ai/webhook-api-for-conversation-events
+asyncapi_published: false
+asyncapi_note: >-
+  Kore.ai publishes NO AsyncAPI document. No /asyncapi.yaml or /asyncapi.json exists on any
+  host, and no AsyncAPI file is present in the first-party docs repository
+  (github.com/Koredotcom/docs-v2). The event surface below is documented in prose only, so
+  this artifact is a webhook/event catalogue rather than a machine-readable event contract.
+direction_warning: >-
+  READ THIS BEFORE INTEGRATING. Most of Kore.ai's documented "webhook" surface is INBOUND —
+  the customer's contact center or CRM POSTs events TO Kore.ai. That is the opposite
+  direction from the outbound subscription webhooks most API consumers expect. The genuinely
+  outbound paths are the Webhook channel and the BotKit event stream, and both are
+  configured in-product rather than through a public subscription API.
+surfaces:
+- name: Agent AI Hooks API (conversation lifecycle events)
+  direction: inbound
+  method: POST
+  endpoint: 'https://{host}/agentassist/api/v1/hooks/{botId}'
+  host_example: https://platform.kore.ai
+  auth: 'auth: {JWT} header'
+  content_type: application/json
+  docs: https://docs.kore.ai/ai-for-service/apis/agent-ai/webhook-api-for-conversation-events
+  events:
+  - {name: internal-transfer, description: 'Internal transfer events — NA, cold and warm transfer.'}
+  - {name: conversation-summary-trigger, description: Trigger generation of a conversation summary.}
+  - {name: end-of-conversation, description: Signal that a conversation has ended.}
+  - {name: user-message, description: Propagate a user message into Agent AI (sendUserMessage).}
+  - {name: agent-message, description: Propagate a human-agent message into Agent AI (sendAgentMessage).}
+  payload_note: >-
+    All events go to the same endpoint and are distinguished by the event name and payload
+    shape. Message events require query, agentId, experience, author.type, source,
+    sendUserMessage, sendAgentMessage and language. Lifecycle events use an events[] array.
+- name: Human-task / tool resume callbacks
+  direction: inbound
+  method: POST
+  endpoint: 'https://agents.kore.ai/api/v1/callbacks/{callbackId}'
+  signing:
+    header: x-callback-signature
+    algorithm: 'HMAC-SHA256 of the raw body keyed on the suspension callback secret, formatted "sha256=" + hex'
+    failure_status: 401
+  guarantees:
+    delivery: at-most-once (the callback ID is atomically claimed)
+    idempotency: duplicate callbacks return 200 with already_processed
+    timeout: callbacks expire after the suspension TTL (configurable)
+    processing: enqueued for reliable processing via a job queue
+  docs: https://github.com/Koredotcom/docs-v2/blob/main/agent-platform/drafts/api-reference/management-apis.mdx
+- name: Webhook channel
+  direction: outbound
+  description: >-
+    A configurable channel that lets an agent exchange messages with an arbitrary HTTP
+    endpoint the customer owns, rather than a packaged messaging platform.
+  docs: https://docs.kore.ai/ai-for-service/channels/add-webhook-channel
+  configuration: In-product channel configuration; no public subscription API.
+- name: Workflow triggers
+  direction: inbound
+  description: >-
+    Workflows can be started by cron, by webhook, by connector polling, or by an agent.
+    Start-input defaults and required-input validation are enforced server-side on every one
+    of those trigger paths (release v1.4.0, 2026-07-30).
+  docs: https://docs.kore.ai/agent-platform/workflows
+- name: BotKit SDK event stream
+  direction: outbound
+  description: >-
+    The Node.js BotKit SDK receives platform events for a bot and lets a customer intercept
+    and handle them in their own service.
+  repository: https://github.com/Koredotcom/BotKit
+- name: Streaming responses (SSE)
+  direction: outbound
+  description: >-
+    Not a webhook, but the platform's real-time push mechanism for conversation output —
+    Server-Sent Events with named text_delta, usage and complete events and a 15-second
+    heartbeat comment.
+  cross_link: conventions/koreai-conventions.yml
+- name: Agent AI Web SDK events
+  direction: client-side
+  description: >-
+    A browser event surface for embedded Agent AI experiences — coaching events, transcript
+    events, search-tab events and customized view events.
+  docs: https://docs.kore.ai/ai-for-service/agentai/integration/websdk/other-events

@@ -1,0 +1,163 @@
+generated: '2026-08-23'
+method: searched
+source: https://trust.kore.ai/ + https://docs.kore.ai/ + openapi/koreai-abl-runtime-*-openapi.json
+standards:
+- id: openapi-3.1
+  conforms: true
+  evidence: openapi/koreai-abl-runtime-sessions-openapi.json and -workflows- declare openapi 3.1.0 with jsonSchemaDialect https://spec.openapis.org/oas/3.1/dialect/base
+- id: openapi-3.0
+  conforms: true
+  evidence: openapi/koreai-abl-runtime-conversation-openapi.json declares openapi 3.0.3
+- id: mcp
+  conforms: true
+  evidence: 'Ships a stdio MCP server, @koreai/arch-mcp-tools 1.5.0, with 45 tools, an arch://guidance/v1/manifest resource and two prompts. See mcp/koreai-mcp.yml.'
+- id: sse-server-sent-events
+  conforms: true
+  evidence: 'Streaming endpoints return Content-Type text/event-stream with named events (text_delta, usage, complete) and a 15-second ": heartbeat" comment.'
+- id: jwt-rfc7519
+  conforms: true
+  evidence: AI for Service API authentication is a signed JWT minted from a JWT App; JTI claim enforcement is a configurable option.
+- id: jwe-rfc7516
+  conforms: true
+  evidence: JWT Apps can be configured to Enforce JWE Encryption.
+- id: oauth2
+  conforms: false
+  evidence: >-
+    No OAuth 2.0 inbound authorization. platform_auth_profiles starts OAuth flows OUTBOUND
+    to third-party systems the agent calls; that is not an OAuth surface Kore.ai exposes.
+- id: openid-connect
+  conforms: false
+  evidence: /.well-known/openid-configuration returns an SPA HTML shell on agents.kore.ai and 404/403 elsewhere. See well-known/koreai-well-known.yml.
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: 'Errors use a vendor {"success", "error": {"code", "message"}} envelope; no application/problem+json is documented.' 
+- id: rfc8594-sunset-header
+  conforms: false
+  evidence: Deprecation is published as a dated notice page; no Sunset or Deprecation response header is documented.
+- id: rfc9116-security-txt
+  conforms: false
+  evidence: /.well-known/security.txt returns 404 on www.kore.ai, docs.kore.ai and agents.kore.ai, and 403 on platform.kore.ai and bots.kore.ai.
+- id: a2a-agent-card
+  conforms: false
+  evidence: /.well-known/agent-card.json and /.well-known/agent.json miss on every Kore.ai host probed 2026-08-23.
+- id: pagination-offset-limit
+  conforms: true
+  evidence: 'List endpoints accept limit (default 50, max 200) and offset (default 0) and return a pagination block with total/limit/offset.'
+- id: idempotency
+  conforms: false
+  partial: true
+  evidence: >-
+    Documented only on the human-task callback surface — duplicate callbacks return 200
+    with already_processed, and delivery is at-most-once via an atomically claimed callback
+    ID. The MCP tool catalog additionally classifies operations as idempotent_write vs
+    write vs destructive_write. There is NO Idempotency-Key request header on any REST write
+    endpoint.
+- id: hmac-webhook-signing
+  conforms: true
+  evidence: Inbound callbacks are verified with x-callback-signature = "sha256=" + HMAC-SHA256(body, callbackSecret).
+- id: soap-wsdl
+  conforms: false
+  evidence: >-
+    Kore.ai CONSUMES WSDL — the platform has a WSDL asset repository and registers SOAP
+    operations as HTTP tools (release v1.3.0, 2026-07-15). It does not PUBLISH a SOAP
+    contract of its own; no ?wsdl or ?singleWsdl endpoint was found on any host.
+- id: grpc-protobuf
+  conforms: false
+  evidence: No .proto definitions found on github.com/Koredotcom or buf.build.
+- id: asyncapi
+  conforms: false
+  evidence: No AsyncAPI document published. The event surface is described in prose; see asyncapi/koreai-webhooks.yml.
+domain_standards:
+  note: >-
+    REWARD-ONLY check. The enterprise conversational/agentic AI market has no single
+    settled interchange standard, and Kore.ai's contract declares none of the candidates
+    (no SCIM URN, no OData $metadata, no ActivityPub actor, no HL7/X12/ISO-20022 message
+    type). The nearest thing to a domain standard it does declare is MCP, recorded above.
+    Kore.ai has also authored its own domain language, ABL (Agent Blueprint Language),
+    which is a first-party DSL rather than a shared standard.
+  declared: []
+compliance:
+  published: true
+  trust_center: https://trust.kore.ai/
+  platform: SafeBase by Drata
+  certifications:
+  - SOC 2 Type 2
+  - PCI DSS
+  - ISO/IEC 27001:2022
+  - GDPR
+  - CCPA
+  - EU AI Act
+  - DESC Cloud Service Provider
+  in_product_controls:
+    note: >-
+      Workspaces using BYOK/KMS can select a compliance level of GDPR, SOC2 or NIST, which
+      the platform enforces at the point of any KMS configuration write (release v1.4.4,
+      2026-08-17).
+  evidence_note: >-
+    Read from https://trust.kore.ai/ on 2026-08-23. The host returns 403 to a plain curl
+    (Cloudflare interstitial, "Just a moment...") and renders normally to a browser — that
+    is an edge bot policy, not a dead page.
+contract_discovery:
+  note: >-
+    Recorded so a later round does not repeat the hunt, and so one specific trap is not
+    walked into twice.
+  false_positive:
+    url: https://docs.kore.ai/api-reference/openapi.json
+    http_status: 200
+    content_type: application/json
+    parses_as_openapi: true
+    openapi_version: 3.1.0
+    verdict: REJECTED — not Kore.ai's contract
+    reason: >-
+      This URL is advertised by Kore.ai's own llms.txt under a "## OpenAPI Specs" heading,
+      returns HTTP 200, and parses as valid OpenAPI 3.1.0. It is the stock Mintlify starter
+      sample. info.title is "OpenAPI Plant Store", info.description says it is "a sample API
+      that uses a plant store as an example to demonstrate features in the OpenAPI
+      specification", and servers[0].url is http://sandbox.mintlify.com. Nothing in it
+      belongs to Kore.ai. It was NOT saved and nothing was derived from it. A fetch-URL check
+      would have passed it; only info.title and servers[] exposed it.
+  hits:
+  - url: https://raw.githubusercontent.com/Koredotcom/docs-v2/main/agent-platform/drafts/apis/conversation.json
+    saved_as: openapi/koreai-abl-runtime-conversation-openapi.json
+    ownership: >-
+      Served from Kore Inc's own GitHub organization (github.com/Koredotcom), in docs-v2 —
+      the source repository behind docs.kore.ai. info.title is "ABL Runtime API -
+      public/conversation"; ABL is Kore.ai's own Agent Blueprint Language, documented at
+      docs.kore.ai/agent-platform/abl. The paths match the base URL and route shapes the
+      provider publishes in the same directory's API reference (agents.kore.ai,
+      /api/v1/project/{projectSlug}/{env}/...).
+    caveat: Lives under agent-platform/drafts/ and is not yet linked from the rendered docs navigation.
+  - url: https://raw.githubusercontent.com/Koredotcom/docs-v2/main/agent-platform/drafts/api-reference/workflows.json
+    saved_as: openapi/koreai-abl-runtime-workflows-openapi.json
+  - url: https://raw.githubusercontent.com/Koredotcom/docs-v2/main/agent-platform/drafts/api-reference/sessions.json
+    saved_as: openapi/koreai-abl-runtime-sessions-openapi.json
+  misses:
+  - {url: 'https://docs.kore.ai/openapi.json', status: 404}
+  - {url: 'https://docs.kore.ai/docs.json', status: 404}
+  - {url: 'https://developer.kore.ai/llms.txt', status: 404}
+  - {url: 'https://api.kore.ai/', status: 0, note: 'host does not resolve'}
+  - {url: 'https://docs.kore.ai/.well-known/agent-card.json', status: 404}
+  - {url: 'https://www.kore.ai/.well-known/agent-card.json', status: 404}
+  - {url: 'https://agents.kore.ai/.well-known/agent-card.json', status: 404}
+  - {url: 'https://agents.kore.ai/.well-known/agent.json', status: 404}
+  graphql:
+    probed: false
+    reason: No /graphql surface is documented or referenced on any Kore.ai host or in the first-party docs repository.
+  mcp_tools_list:
+    probed: true
+    result: not-obtainable-anonymously
+    reason: >-
+      The server is stdio-only and its tarball ships without bundled runtime dependencies
+      (@modelcontextprotocol/sdk resolves only after an install), and every tool is gated
+      behind platform_connect authentication. Tool NAMES were read from the package's own
+      registry file instead; see mcp/koreai-mcp.yml.
+  uncontracted_estate:
+    name: AI for Service platform APIs
+    note: >-
+      The larger, older estate on platform.kore.ai — Automation AI, Search AI, Contact
+      Center AI, Agent AI, Quality AI, Case Management — is documented as hundreds of prose
+      reference pages with method, endpoint, path/body parameter tables and curl samples,
+      and has NO machine-readable contract at all. The only machine-readable artifact for it
+      is a first-party Postman collection last updated in 2019
+      (github.com/Koredotcom/Public-APIs). That gap is the single largest thing Kore.ai could
+      fix.

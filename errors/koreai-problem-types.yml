@@ -1,0 +1,70 @@
+generated: '2026-08-23'
+method: searched
+source: https://github.com/Koredotcom/docs-v2/blob/main/agent-platform/drafts/api-reference/index.mdx
+docs:
+- https://github.com/Koredotcom/docs-v2/blob/main/agent-platform/drafts/api-reference/index.mdx
+- https://docs.kore.ai/ai-for-service/agentai/integration/websdk/error-codes
+format: vendor-json
+format_note: >-
+  NOT RFC 9457. No Kore.ai surface returns application/problem+json. The Agent Platform
+  wraps errors in a vendor envelope {"success": false, "error": {"code", "message"}}, and
+  the provider states that some endpoints instead return a simplified {"error": "..."}
+  string form — two shapes on one estate, which a client has to handle defensively.
+envelope:
+  success:
+    shape: '{"success": true, "data": {...}}'
+    note: Some endpoints return a domain-specific top-level key (sessions, agents, deployment) instead of data; success is always present.
+  error:
+    shape: '{"success": false, "error": {"code": "NOT_FOUND", "message": "Agent not found: my-agent"}}'
+    simplified_shape: '{"error": "Project not found"}'
+privacy_behaviour: >-
+  Cross-tenant access attempts return 404 rather than 403, so an unauthorized caller
+  cannot use the status code to prove a resource exists.
+problems:
+- {code: BAD_REQUEST, status: 400, title: Invalid or missing request parameters, remediation: Check request body against the endpoint schema}
+- {code: VALIDATION_ERROR, status: 400, title: Invalid request parameters, remediation: Review field values and types}
+- {code: UNAUTHORIZED, status: 401, title: Authentication failed, remediation: Verify your token or API key is valid and not expired}
+- {code: FORBIDDEN, status: 403, title: Insufficient permissions, remediation: Check that your credentials have the required scope}
+- {code: NOT_FOUND, status: 404, title: Resource not found, remediation: Confirm the resource ID and that you have access}
+- {code: RATE_LIMIT_EXCEEDED, status: 429, title: Rate limit exceeded, remediation: Wait for the rate limit window to reset and retry}
+- {code: QUEUE_FULL, status: 429, title: Execution queue at capacity, remediation: Reduce concurrency or retry after retryAfterMs}
+- {code: INTERNAL_ERROR, status: 500, title: Unexpected server error, remediation: Retry after a brief delay; contact support if persistent}
+- {code: SERVICE_UNAVAILABLE, status: 503, title: Backend dependency offline, remediation: Retry later; the service may be starting up}
+status_codes:
+- {status: 200, meaning: OK, when: Successful read or update}
+- {status: 201, meaning: Created, when: Resource created successfully}
+- {status: 400, meaning: Bad Request, when: Validation failed or required fields missing}
+- {status: 401, meaning: Unauthorized, when: Missing or invalid authentication credentials}
+- {status: 403, meaning: Forbidden, when: Valid credentials but insufficient permissions}
+- {status: 404, meaning: Not Found, when: Resource does not exist or is not accessible to the caller}
+- {status: 409, meaning: Conflict, when: 'Duplicate resource (for example a secret that already exists)'}
+- {status: 413, meaning: Payload Too Large, when: 'Request body exceeds the size limit (1 MB standard, 60 MB for import endpoints)'}
+- {status: 429, meaning: Too Many Requests, when: Rate limit or concurrency limit exceeded}
+- {status: 500, meaning: Internal Server Error, when: Unexpected server-side failure}
+- {status: 503, meaning: Service Unavailable, when: Required backend service not configured or offline}
+callback_errors:
+  surface: POST /api/v1/callbacks/{callbackId}
+  errors:
+  - {status: 200, code: already_processed, cause: Callback was already delivered}
+  - {status: 401, code: invalid-signature, cause: HMAC verification of x-callback-signature failed}
+  - {status: 503, code: service-temporarily-unavailable, cause: Failed to enqueue the resume job; retry safe}
+client_sdk_error_codes:
+  surface: Agent AI Web SDK
+  source: https://docs.kore.ai/ai-for-service/agentai/integration/websdk/error-codes
+  codes:
+  - {code: ERR_WS_INIT, class: socket, messages: [Socket connection failed, Socket connection timeout, Socket disconnected, Socket reconnection failed, Socket error], required_fields: [token, conversationId]}
+  - {code: ERR_SETTINGS_API_FAILURE, class: api, messages: [Settings API failed], required_fields: [botId, channel]}
+  - {code: ERR_CHECKLIST_API_FAILURE, class: api, messages: [Checklist API failed], required_fields: [botId]}
+  - {code: ERR_ASST_HISTORY_API_FAILURE, class: api, messages: [Assist history API failed], required_fields: [botId, conversationId]}
+  - {code: ERR_MYBOT_HISTORY_API_FAILURE, class: api, messages: [MyBot history API failed], required_fields: [botId, conversationId]}
+  - {code: ERR_FEEDBACK_API_FAILURE, class: api, messages: [Feedback API failed], required_fields: [tab, conversationId]}
+  - {code: ERR_SUMMARY_LOAD_FAILURE, class: api, messages: [Summary load failed], required_fields: [conversationId, botId, channel, sessionId]}
+  - {code: ERR_TOKEN_INVALID, class: validation, messages: [Invalid token], required_fields: [token, botId]}
+  - {code: ERR_MISSING_REQ_FIELDS, class: validation, messages: [Missing required fields to send user message, Missing required fields to send agent message], required_fields: [author, type, conversationId, value, botId]}
+  - {code: ERR_JS_CODE, class: misc, messages: [JS code failed], required_fields: []}
+spec_derived:
+  note: >-
+    The three published OpenAPI files declare a single components.schemas.ErrorResponse of
+    {"error": string} and attach it to 4xx responses. Every code and status above beyond
+    that came from the provider's prose reference, which is why this file is method
+    searched rather than derived.

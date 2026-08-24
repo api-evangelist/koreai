@@ -1,0 +1,122 @@
+generated: '2026-08-23'
+method: derived
+source: mcp/koreai-mcp.yml + openapi/koreai-abl-runtime-*-openapi.json
+note: >-
+  The Arch MCP server and the published ABL Runtime OpenAPI describe DIFFERENT halves of
+  the same platform, and the divergence is the finding. MCP is a CONTROL-PLANE surface
+  (projects, agents, workflows, deployments, evals, traces) whose backing management REST
+  routes are documented only in prose at
+  github.com/Koredotcom/docs-v2/blob/main/agent-platform/drafts/api-reference/management-apis.mdx
+  and are absent from the three machine-readable specs. The OpenAPI files are a
+  DATA-PLANE surface (chat, streaming, workflow invocation, usage). Almost nothing binds
+  cleanly, so almost every row is honestly mcp_only or rest_only rather than a forced
+  mapping.
+surfaces:
+  openapi:
+  - openapi/koreai-abl-runtime-conversation-openapi.json
+  - openapi/koreai-abl-runtime-workflows-openapi.json
+  - openapi/koreai-abl-runtime-sessions-openapi.json
+  graphql: null
+  mcp:
+    server: arch-agent-platform
+    transport: stdio
+    install: npx -y @koreai/arch-mcp-tools
+    tools_list_gated: true
+    tools_list_note: Requires local install plus an authenticated platform_connect; names taken from the package tool registry.
+crosswalk:
+- tool: platform_workflows
+  category: workflows
+  rest:
+  - runtime.workflow.invoke
+  - runtime.workflow.execute
+  - runtime.workflow.executeVersion
+  - runtime.workflow.getExecution
+  binding: rest
+  confidence: medium
+  note: >-
+    The tool's documented "execute" action maps to the four published workflow-execution
+    operations. Its create/update/publish/expose-as-tool actions have no published REST
+    operation.
+- tool: debug_send_message
+  category: conversation
+  rest:
+  - runtime.agent.chat
+  - runtime.agent.stream
+  binding: rest
+  confidence: medium
+  note: >-
+    Mapped by semantics — "send a message to an agent" is exactly what the deployment-scoped
+    chat and SSE stream operations do. The debug tool operates on a debug session created by
+    debug_load_agent rather than on a deployed agent, so the binding is not exact.
+- tool: debug_session_history
+  category: sessions
+  rest:
+  - runtime.legacyChat.getUsage
+  binding: rest
+  confidence: low
+  note: >-
+    Weak. Both read durable session data, but getUsage returns usage metrics for a project,
+    not the trace pages debug_session_history returns. The session-listing REST routes
+    (/api/projects/:projectId/sessions) are prose-documented only and absent from the specs.
+mcp_only:
+- {tool: platform_connect, reason: Client-side auth/bootstrap; no REST equivalent.}
+- {tool: platform_projects, reason: Management-plane route documented in prose only; absent from the published specs.}
+- {tool: platform_agents, reason: Management-plane route documented in prose only; absent from the published specs.}
+- {tool: platform_versions, reason: Management-plane route documented in prose only; absent from the published specs.}
+- {tool: platform_deployments, reason: Management-plane route documented in prose only; absent from the published specs.}
+- {tool: platform_tools, reason: Management-plane route documented in prose only; absent from the published specs.}
+- {tool: platform_auth_profiles, reason: Management-plane; create is deliberately restricted to authType none over MCP.}
+- {tool: platform_integrations, reason: Management-plane connector configuration; no published REST operation.}
+- {tool: platform_mcp_servers, reason: Management-plane MCP provisioning; no published REST operation.}
+- {tool: platform_sdk_channels, reason: Management-plane channel/key creation; no published REST operation.}
+- {tool: platform_import_export, reason: Management-plane project import/export; no published REST operation.}
+- {tool: platform_config, reason: Management-plane project/LLM configuration; no published REST operation.}
+- {tool: platform_workspaces, reason: Workspace switching is client/session state; no REST operation.}
+- {tool: platform_arch_sop, reason: Studio Arch build session; server-side composite with no REST operation.}
+- {tool: platform_arch_auto_loop, reason: Studio Arch repair loop; server-side composite with no REST operation.}
+- {tool: platform_project_builder, reason: Feature-neutral planning protocol; deliberately not one-tool-per-REST-endpoint.}
+- {tool: platform_project_builder_operations, reason: Durable grant-gated operation protocol; has no REST analogue.}
+- {tool: platform_validate_package, reason: Compiler/validation service; no published REST operation.}
+- {tool: platform_package_model, reason: Compiler-visible model inspection; no published REST operation.}
+- {tool: agent_tables, reason: Agent Tables CRUD; no published REST operation.}
+- {tool: platform_eval_personas, reason: Evaluation asset management; no published REST operation.}
+- {tool: platform_eval_scenarios, reason: Evaluation asset management; no published REST operation.}
+- {tool: platform_eval_evaluators, reason: Evaluation asset management; no published REST operation.}
+- {tool: platform_eval_sets, reason: Evaluation asset management; no published REST operation.}
+- {tool: platform_eval_runs, reason: Evaluation run orchestration; no published REST operation.}
+- {tool: debug_harness_logs, reason: CI execution logs; no published REST operation.}
+- {tool: debug_lint_abl, reason: ABL lint service; no published REST operation.}
+- {tool: debug_why_transcript_failed, reason: Diagnostic composite over traces; no published REST operation.}
+- {tool: debug_diagnose_transcript, reason: Alias of the above.}
+- {tool: debug_list_agents, reason: Debug-session agent discovery; no published REST operation.}
+- {tool: debug_load_agent, reason: Creates a debug session; no published REST operation.}
+- {tool: debug_get_current_state, reason: Debug-session state inspection; no published REST operation.}
+- {tool: debug_traces, reason: Trace search; no published REST operation.}
+- {tool: debug_get_span_tree, reason: Span tree view; no published REST operation.}
+- {tool: debug_explain_decision, reason: Decision explanation composite; no published REST operation.}
+- {tool: debug_get_flow_graph, reason: State-machine graph render; no published REST operation.}
+- {tool: debug_get_errors, reason: Error/warning/escalation read; no published REST operation.}
+- {tool: debug_list_active_sessions, reason: Live session subscription list; no published REST operation.}
+- {tool: debug_session, reason: Trace subscribe/unsubscribe; streaming control, not a REST call.}
+- {tool: debug_docs, reason: Documentation search served by the MCP server itself.}
+- {tool: debug_diagnose, reason: Diagnostic composite; no published REST operation.}
+- {tool: debug_analyze_session, reason: Session diagnostics composite; no published REST operation.}
+rest_only:
+- capability: Legacy conversation surface
+  operations:
+  - runtime.legacyChat.agent
+  - runtime.legacyChat.stream
+  - runtime.legacyChat.complete
+  - runtime.legacyChat.createSession
+  note: All four are marked deprecated in the spec in favour of the deployment-scoped routes; no MCP tool exposes them.
+- capability: Deployed-agent one-shot completion
+  operations:
+  - runtime.agent.complete
+  note: No MCP tool exposes a non-streaming completion against a deployed agent.
+coverage:
+  tools_named: 45
+  tools_bound: 3
+  mcp_only: 42
+  rest_operations_total: 12
+  rest_operations_with_a_tool: 7
+  rest_only: 5

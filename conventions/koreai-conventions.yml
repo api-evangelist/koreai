@@ -1,0 +1,161 @@
+generated: '2026-08-23'
+method: searched
+source: https://github.com/Koredotcom/docs-v2/blob/main/agent-platform/drafts/api-reference/index.mdx
+docs:
+- https://github.com/Koredotcom/docs-v2/blob/main/agent-platform/drafts/api-reference/index.mdx
+- https://github.com/Koredotcom/docs-v2/blob/main/agent-platform/drafts/api-reference/management-apis.mdx
+- https://docs.kore.ai/ai-for-service/apis/automation/api-introduction
+scope: >-
+  These conventions describe the Agent Platform (Artemis) estate on agents.kore.ai, which
+  is where Kore.ai publishes a cross-cutting reference. The older AI for Service estate on
+  platform.kore.ai documents its conventions per-endpoint rather than centrally; its
+  differences are noted inline.
+auth:
+  style: bearer-token-or-prefixed-api-key
+  detail: See authentication/koreai-authentication.yml. The AI for Service estate instead uses a non-standard `auth` header carrying a signed JWT.
+request:
+  content_type: application/json
+  encoding: UTF-8
+  max_body_size: 1 MB standard endpoints; 60 MB for import endpoints
+response_envelope:
+  success: '{"success": true, "data": {...}}'
+  success_variant: Some endpoints return a domain-specific top-level key (sessions, agents, deployment) instead of data. The success field is always present.
+  error: '{"success": false, "error": {"code": "...", "message": "..."}}'
+  error_variant: '{"error": "Project not found"} on some endpoints'
+  cross_link: errors/koreai-problem-types.yml
+pagination:
+  style: offset-limit
+  params:
+  - {name: limit, type: integer, default: 50, max: 200}
+  - {name: offset, type: integer, default: 0}
+  response_fields:
+    container: pagination
+    fields: [total, limit, offset]
+  cursor: false
+  note: Callers determine whether more pages exist by comparing offset+limit against total.
+streaming:
+  transport: server-sent-events
+  content_type: text/event-stream
+  events: [text_delta, usage, complete]
+  heartbeat: 'A ": heartbeat" comment every 15 seconds keeps the connection alive through proxies'
+  endpoints:
+  - /api/v1/chat/stream
+  - '/api/v1/project/{projectSlug}/{env}/agent/{agentSlug}/stream'
+idempotency:
+  supported: partial
+  header: null
+  header_note: >-
+    There is NO Idempotency-Key request header on any Kore.ai REST write endpoint. An agent
+    retrying a failed POST cannot deduplicate it at the protocol level.
+  surfaces:
+  - surface: Human-task / tool callbacks (POST /api/v1/callbacks/{callbackId})
+    guarantee: >-
+      Delivery is at-most-once — the callback ID is atomically claimed. A duplicate callback
+      returns HTTP 200 with already_processed rather than re-running the resume.
+    retention: Until the suspension TTL expires (configurable per suspension).
+    source: https://github.com/Koredotcom/docs-v2/blob/main/agent-platform/drafts/api-reference/management-apis.mdx
+  - surface: Arch MCP operation catalog
+    guarantee: >-
+      Every catalogued operation carries one of the safety classes read, write,
+      idempotent_write, grant_gated_write or destructive_write. The provider's own packaged
+      Agent Skill instructs clients to "treat plain write as non-idempotent unless the live
+      operation proves otherwise", and to verify rather than blindly retry a mutation with
+      an unknown outcome.
+    source: https://docs.kore.ai/agent-platform/use-mcp-server
+  scope: null
+versioning:
+  scheme: uri-path
+  current: v1
+  cross_link: lifecycle/koreai-lifecycle.yml
+rate_limit_signalling:
+  headers: []
+  status: 429
+  codes: [RATE_LIMIT_EXCEEDED, QUEUE_FULL]
+  retry_hint: retryAfterMs field inside the QUEUE_FULL error payload; no Retry-After header
+  cross_link: rate-limits/koreai-rate-limits.yml
+request_id_tracing:
+  header: null
+  note: >-
+    No request-id / correlation-id response header is documented. Tracing is done
+    out-of-band through the platform's own trace surface — debug_traces, debug_get_span_tree
+    and debug_session_history over MCP, and the analytics/trace UI — keyed on sessionId and
+    projectId rather than a per-request header returned to the caller.
+  identifiers: [sessionId, projectId, conversationId, deploymentId]
+field_expansion:
+  supported: false
+  note: No expand / fields / sparse-fieldset parameter is documented.
+metadata:
+  supported: false
+  note: No generic customer-controlled metadata bag is documented on API resources.
+cors:
+  note: Widget and SDK endpoints set CORS headers from the configured allowedOrigins list; the runtime validates the Origin header on every SDK request and rejects unlisted origins.
+webhook_signing:
+  direction: inbound-to-kore
+  header: x-callback-signature
+  algorithm: 'HMAC-SHA256 over the raw request body, formatted "sha256=" + hex digest'
+  failure: 401 Invalid signature
+tenancy:
+  note: Cross-tenant access attempts return 404 rather than 403 so the status code cannot be used to prove a resource exists.
+dry_run_mode:
+  supported: partial
+  note: >-
+    There is no ?dry_run= parameter on the REST surface. The platform does ship rehearsal
+    tooling one layer up: platform_validate_package validates a local package with an
+    optional import PREVIEW, platform_eval_runs supports a preflight, and
+    platform_project_builder is explicitly a plan-then-execute protocol where side effects
+    require an attempt-bound grant returned separately by Studio.
+reversibility:
+  applicable: true
+  grade: documented
+  grade_reason: >-
+    Reversal operations are named and documented for deployments and versions, but NO
+    reversal WINDOW is stated anywhere — not for deployment rollback, not for version
+    restore, not for project delete. Under the 0.12.0 rule that is `documented` (0.4), not
+    `verified`. No window is asserted here because the provider states none.
+  operations:
+  - action: Retire a deployment
+    operation: POST /api/projects/{projectId}/deployments/{deploymentId}/retire
+    reversal: POST /api/projects/{projectId}/deployments/{deploymentId}/rollback
+    reversal_description: Rollback a retired deployment to its previous active state.
+    window: null
+    window_stated: false
+    behaviour: Active sessions are drained before full retirement; the response carries status "retired" and a retiredAt timestamp.
+    docs: https://github.com/Koredotcom/docs-v2/blob/main/agent-platform/drafts/api-reference/management-apis.mdx
+  - action: Promote a deployment to a new version
+    operation: platform_deployments(promote)
+    reversal: platform_deployments(rollback)
+    reversal_description: The MCP deployments tool exposes list, get, create, promote, rollback, restore and retire as first-class actions.
+    window: null
+    window_stated: false
+    docs: https://docs.kore.ai/agent-platform/use-mcp-server
+  - action: Publish an immutable version
+    operation: platform_versions(publish)
+    reversal: platform_deployments(rollback) or platform_deployments(restore)
+    reversal_description: >-
+      Versions are immutable and auditable (the tool exposes list, get, publish,
+      qualifications, audit, diff), so the reversal is to redeploy or restore a prior
+      version rather than to unpublish.
+    window: null
+    window_stated: false
+  - action: Delete a project / agent / tool
+    operation: platform_projects(delete), platform_tools(delete)
+    reversal: null
+    reversal_description: >-
+      No undelete or restore-within-N-days path is documented for project, agent or tool
+      deletion. The MCP safety taxonomy classifies these as destructive_write requiring an
+      explicit confirmation/grant before execution, which is a guard against the action —
+      not a way back from it.
+    window: null
+    window_stated: false
+  - action: Delete Customer Data (AI for Service)
+    operation: Delete Customer Data API (+ Delete Customer Data Status API)
+    reversal: null
+    reversal_description: Irreversible by design — this is the GDPR/CCPA erasure path. An asynchronous status endpoint is provided to confirm completion.
+    window: null
+    window_stated: false
+    docs: https://docs.kore.ai/ai-for-service/apis/automation/api-list
+  note: >-
+    The agent-facing summary: deployment state is reversible and the reversal is a
+    first-class documented operation; resource deletion is not reversible and the provider
+    guards it with a grant instead. An agent should treat any platform_*(delete) as
+    terminal.

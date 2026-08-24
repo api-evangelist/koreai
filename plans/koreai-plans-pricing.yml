@@ -1,0 +1,25 @@
+generated: '2026-08-23'
+method: searched
+source: https://www.kore.ai/llms.txt
+plan_count: 0
+note: >-
+  Kore.ai publishes NO first-party pricing page. Probed 2026-08-23: www.kore.ai/pricing
+  404, www.kore.ai/plans-pricing 404, www.kore.ai/ai-agent-platform/pricing 404, and
+  developer.kore.ai/pricing 404. The company's own llms.txt — which enumerates the entire
+  marketing site including Company, Resources and Optional/legal sections — contains no
+  pricing entry at all. agents.kore.ai/pricing redirects to the login wall at
+  agents.kore.ai/auth/login. The published commercial paths are "Request a Demo" and
+  "Contact Us", i.e. a sales gate. Third-party write-ups describe a per-15-minute-session
+  billing model and enterprise contracts, but nothing on that is first-party, so nothing
+  from them is recorded here.
+plans: []
+commercial_entry_points:
+- {name: Request a Demo, url: https://www.kore.ai/request-a-demo, status: 200}
+- {name: Contact Us, url: https://www.kore.ai/contact-us, status: 200}
+- {name: Sign in / Sign up (Agent Platform), url: https://agents.kore.ai/auth/login, status: 200}
+evidence:
+- {url: https://www.kore.ai/pricing, status: 404}
+- {url: https://www.kore.ai/plans-pricing, status: 404}
+- {url: https://www.kore.ai/ai-agent-platform/pricing, status: 404}
+- {url: https://developer.kore.ai/pricing, status: 404}
+- {url: https://agents.kore.ai/pricing, status: 200, note: 'redirects to https://agents.kore.ai/auth/login'}

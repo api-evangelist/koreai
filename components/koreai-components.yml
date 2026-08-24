@@ -1,0 +1,68 @@
+generated: '2026-08-23'
+method: searched
+source: https://docs.kore.ai/agent-platform/sdks + https://github.com/Koredotcom
+note: >-
+  Kore.ai ships embeddable client-side surfaces distinct from its server SDKs — chat and
+  voice widgets a customer drops into their own web app or native app, plus an agent-desktop
+  widget for contact center consoles. These are bootstrapped with an origin-restricted
+  public key (pk_) exchanged on POST /api/v1/sdk/init for a short-lived SDK session token,
+  and the runtime validates the Origin header on every SDK request against a configured
+  allowedOrigins list.
+families:
+- family: Agent Platform (Artemis) Web SDK
+  description: Embeddable web component for voice and chat interactions with Agent Platform agents.
+  surface: web
+  loader:
+    package: '@koreai/artemis-web-sdk'
+    registry: npm
+    version: 1.1.0
+    published: '2026-08-03'
+  docs: https://docs.kore.ai/agent-platform/sdks
+  channel_setup: https://docs.kore.ai/agent-platform/channels/set-up-web-sdk-channel
+  bootstrap:
+    endpoint: POST /api/v1/sdk/init
+    key_header: X-Public-Key
+    key_prefix: pk_
+    config_endpoint: 'GET /api/v1/sdk/config/{projectId}'
+    origin_restriction: allowedOrigins list validated on every request
+- family: Kore Web SDK (Bots)
+  description: Long-standing browser chat widget for XO / AI for Service agents.
+  surface: web
+  loader:
+    package: kore-web-sdk
+    registry: npm
+    version: 11.27.1
+    published: '2026-08-10'
+  repository: https://github.com/Koredotcom/web-kore-sdk
+  docs: https://docs.kore.ai/ai-for-service/sdk/sdk-events
+- family: Agent AI Web SDK
+  description: >-
+    Agent-assist widget embedded in a human agent's desktop — real-time coaching, transcript,
+    search tab and summary panels, with a documented client-side event and error-code surface.
+  surface: web
+  loader:
+    package: '@koreai/agentai-web-sdk'
+    registry: npm
+    version: 11.27.0
+    published: '2026-07-29'
+  events_docs: https://docs.kore.ai/ai-for-service/agentai/integration/websdk/other-events
+  error_codes: errors/koreai-problem-types.yml
+- family: AgentAssist Widget
+  description: Packaged agent-assist widget distribution for contact center desktops.
+  surface: web
+  repository: https://github.com/Koredotcom/AgentAssistWidget
+- family: Mobile SDKs
+  description: Native chat/voice components for iOS, Android and React Native.
+  surface: mobile
+  distributions:
+  - {platform: iOS, repository: 'https://github.com/Koredotcom/iOS-kore-sdk'}
+  - {platform: Android, repository: 'https://github.com/Koredotcom/android-kore-sdk'}
+  - {platform: React Native, repository: 'https://github.com/Koredotcom/react-native-botsdk'}
+- family: SearchAssist Web SDK
+  description: Embeddable search experience for Search AI.
+  surface: web
+  repository: https://github.com/Koredotcom/SearchAssist-web-sdk
+security_notes:
+- Public widget keys (pk_) are safe to expose in client-side code only when origin-restricted; the docs say so explicitly.
+- CORS headers on widget/SDK endpoints are derived from the configured allowedOrigins list.
+- SDK security guidance is published at https://docs.kore.ai/ai-for-service/sdk/sdk-security

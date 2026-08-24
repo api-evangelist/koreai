@@ -1,0 +1,146 @@
+generated: '2026-08-23'
+method: derived
+source: openapi/koreai-abl-runtime-*-openapi.json + https://docs.kore.ai/agent-platform/concepts
+note: >-
+  Derived from the path templates and parameters of the three published ABL Runtime specs,
+  cross-read against the Agent Platform "Building blocks" concept page and the MCP tool
+  catalogue. The specs are thin on schemas — components.schemas holds only ErrorResponse —
+  so the relationships below come from path structure (which is real and unambiguous:
+  /api/v1/project/{projectSlug}/{env}/agent/{agentSlug}/chat states the containment
+  hierarchy) rather than from $ref graphs. Field-level attributes are deliberately NOT
+  invented.
+identifier_style:
+  style: slug-and-id-mixed
+  note: >-
+    Runtime routes address resources by SLUG (projectSlug, agentSlug, workflowSlug) plus an
+    environment segment, while management routes and MCP tools address them by ID
+    (projectId, deploymentId, workflowId, sessionId, executionId, callbackId). A consumer
+    has to hold both forms. Project IDs appear in examples with a proj_ prefix and callbacks
+    with a cb_ prefix; API keys use abl_, ak_, pk_ and sdk_ prefixes (see
+    authentication/koreai-authentication.yml).
+entities:
+- name: Workspace
+  description: Top-level tenant container; a user switches between workspaces.
+  evidence: platform_workspaces MCP tool (list, switch, inspect); docs.kore.ai/agent-platform/administration/workspace-and-team
+  relationships:
+  - {type: has_many, target: Project, via: workspace membership}
+- name: Project
+  description: The unit of work — holds agents, workflows, tools, knowledge, configuration and deployments.
+  identifiers: [projectSlug, projectId]
+  evidence: 'path segment /api/v1/project/{projectSlug}/ and /api/projects/{projectId}/'
+  relationships:
+  - {type: has_many, target: Agent, via: projectSlug}
+  - {type: has_many, target: Workflow, via: projectSlug}
+  - {type: has_many, target: Tool, via: projectId}
+  - {type: has_many, target: Version, via: projectId}
+  - {type: has_many, target: Deployment, via: projectId}
+  - {type: has_many, target: Session, via: projectId}
+  - {type: has_many, target: AgentTable, via: projectId}
+- name: Environment
+  description: A named environment segment inside a project's runtime route (the {env} path parameter).
+  evidence: 'path segment /api/v1/project/{projectSlug}/{env}/'
+  relationships:
+  - {type: belongs_to, target: Project, via: path containment}
+- name: Agent
+  description: A deployed conversational or task agent, authored in ABL.
+  identifiers: [agentSlug]
+  evidence: 'runtime.agent.chat, runtime.agent.complete, runtime.agent.stream on /agent/{agentSlug}/'
+  relationships:
+  - {type: belongs_to, target: Project, via: projectSlug}
+  - {type: has_many, target: Session, via: agent execution}
+- name: Workflow
+  description: A deterministic multi-step flow that can be invoked directly or exposed to an agent as a tool.
+  identifiers: [workflowSlug, workflowId]
+  evidence: runtime.workflow.invoke, runtime.workflow.execute, runtime.workflow.executeVersion
+  relationships:
+  - {type: belongs_to, target: Project, via: projectSlug}
+  - {type: has_many, target: WorkflowExecution, via: workflowId}
+  - {type: has_many, target: WorkflowVersion, via: version}
+- name: WorkflowExecution
+  description: One asynchronous run of a workflow, pollable for status.
+  identifiers: [executionId]
+  evidence: 'runtime.workflow.getExecution on /api/v1/workflows/{workflowId}/executions/{executionId}'
+  relationships:
+  - {type: belongs_to, target: Workflow, via: workflowId}
+- name: WorkflowVersion
+  description: A pinned, executable version of a workflow.
+  identifiers: [version]
+  evidence: 'runtime.workflow.executeVersion on /api/v1/workflows/{workflowId}/versions/{version}/execute'
+  relationships:
+  - {type: belongs_to, target: Workflow, via: workflowId}
+- name: Session
+  description: A durable conversation/execution session carrying persisted traces.
+  identifiers: [sessionId]
+  evidence: runtime.legacyChat.createSession; debug_session_history; /api/projects/{projectId}/sessions
+  relationships:
+  - {type: belongs_to, target: Project, via: projectId}
+  - {type: has_many, target: Trace, via: sessionId}
+- name: Trace
+  description: An execution event inside a session (llm_call, tool_call and others), organised into a span tree.
+  evidence: debug_traces, debug_get_span_tree, debug_session_history types filter
+  relationships:
+  - {type: belongs_to, target: Session, via: sessionId}
+- name: Tool
+  description: A capability an agent can call — code tool, HTTP tool, SOAP/WSDL-derived tool, MCP tool, or an exposed workflow.
+  evidence: platform_tools MCP tool; docs.kore.ai/agent-platform/tools-overview
+  relationships:
+  - {type: belongs_to, target: Project, via: projectId}
+  - {type: belongs_to, target: AuthProfile, via: opaque profile ID}
+- name: AuthProfile
+  description: Credential holder bound to integrations and MCP servers by opaque reference; secrets never enter tool arguments.
+  evidence: platform_auth_profiles MCP tool
+  relationships:
+  - {type: belongs_to, target: Project, via: projectId}
+- name: Integration
+  description: A configured connector connection (Confluence, Google Drive, ServiceNow, SFTP, SharePoint, custom HTTP).
+  evidence: platform_integrations MCP tool; docs.kore.ai/agent-platform/connectors/
+  relationships:
+  - {type: belongs_to, target: Project, via: projectId}
+  - {type: belongs_to, target: AuthProfile, via: opaque profile ID}
+- name: Version
+  description: An immutable published version of a project, with qualifications, audit trail and diff.
+  evidence: platform_versions MCP tool (list, get, publish, qualifications, audit, diff)
+  relationships:
+  - {type: belongs_to, target: Project, via: projectId}
+  - {type: has_many, target: Deployment, via: promotion}
+- name: Deployment
+  description: A typed deployment of a version to an environment; supports promote, rollback, restore and retire.
+  identifiers: [deploymentId]
+  evidence: 'POST /api/projects/{projectId}/deployments/{deploymentId}/retire and /rollback; platform_deployments MCP tool'
+  relationships:
+  - {type: belongs_to, target: Project, via: projectId}
+  - {type: belongs_to, target: Version, via: promotion}
+- name: KnowledgeBase
+  description: Indexed content an agent retrieves against, populated by connectors.
+  evidence: docs.kore.ai/agent-platform/knowledge
+  relationships:
+  - {type: belongs_to, target: Project, via: projectId}
+- name: AgentTable
+  description: Structured tabular data definitions and project-scoped rows agents read and write.
+  evidence: agent_tables MCP tool
+  relationships:
+  - {type: belongs_to, target: Project, via: projectId}
+- name: EvalSet
+  description: A set of eval scenarios, personas and evaluators used to score agent behaviour.
+  evidence: platform_eval_sets, platform_eval_scenarios, platform_eval_personas, platform_eval_evaluators
+  relationships:
+  - {type: belongs_to, target: Project, via: projectId}
+  - {type: has_many, target: EvalRun, via: eval set}
+- name: EvalRun
+  description: One execution of an eval set, with preflight, cases and heatmaps.
+  evidence: platform_eval_runs MCP tool
+  relationships:
+  - {type: belongs_to, target: EvalSet, via: eval set}
+- name: Channel
+  description: A delivery surface an agent is published to (Web SDK, Teams/Copilot, Slack, Genesys Open Messaging, voice, webhook).
+  evidence: platform_sdk_channels MCP tool; docs.kore.ai/agent-platform/channels
+  relationships:
+  - {type: belongs_to, target: Project, via: projectId}
+- name: Callback
+  description: A resume handle for a suspended agent awaiting an external human task or tool result.
+  identifiers: [callbackId]
+  evidence: 'POST /api/v1/callbacks/{callbackId} with x-callback-signature'
+  relationships:
+  - {type: belongs_to, target: Session, via: suspension}
+render: null
+render_note: No subway/ diagram exists in this repo yet.

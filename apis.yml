@@ -1,18 +1,136 @@
 aid: koreai
 name: Kore.ai
-description: 'Kore.ai is a company surfaced via the API Evangelist harvest backlog (source: secondary-market)
-  and added to the network as a stub for full-pipeline profiling.'
+description: >-
+  Kore.ai is an enterprise conversational and agentic AI platform used to build, deploy,
+  govern and observe AI agents for customer experience and employee experience work —
+  contact center automation, voice AI, IT and HR service desks, agent assist, quality
+  assurance and no-code agent orchestration. The company ships two API estates. The newer
+  Agent Platform ("Artemis") on agents.kore.ai exposes an ABL Runtime API for chat,
+  streaming, workflow invocation and session usage, an Agent Blueprint Language (ABL) DSL,
+  and a 45-tool stdio MCP server (@koreai/arch-mcp-tools) that turns the platform's own
+  control plane into agent tooling. The longer-established AI for Service estate on
+  platform.kore.ai exposes a large REST surface across Automation AI, Search AI, Contact
+  Center AI, Agent AI, Quality AI and Case Management, authenticated with JWT apps and
+  governed by an assigned API-scope model. Kore.ai is headquartered in Orlando, Florida and
+  is recognized as a Leader in the Gartner Magic Quadrant for Conversational AI, the
+  Forrester Wave for Conversational AI Platforms and the Everest Group PEAK Matrix for
+  Agentic AI Products.
+image: https://cdn.prod.website-files.com/6717a0dfaf71071a80dfce8b/68c807cb7a0e90c787610ed0_Kore.ai%20OG%20Image.jpg
 url: https://raw.githubusercontent.com/api-evangelist/koreai/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
 specificationVersion: '0.20'
+x-enrichment:
+  date: '2026-08-23'
+  status: enriched
+  artifacts_added: 29
+  pass: local-v1
 created: '2026-08-23'
 modified: '2026-08-23'
 tags:
 - Company
-apis: []
+- Artificial Intelligence
+- Conversational AI
+- Agents
+- Agent Platform
+- Contact Center
+- Customer Experience
+- Employee Experience
+- Voice
+- Automation
+- Model Context Protocol
+- Enterprise Software
+apis:
+- name: Kore.ai Agent Platform ABL Runtime API — Conversation
+  description: >-
+    Deployment-scoped conversation operations for agents built on the Kore.ai Agent
+    Platform: send a message to a deployed agent, run a one-shot completion, and stream an
+    agent response over Server-Sent Events. Also carries four deprecated legacy chat
+    operations retained for migration.
+  humanURL: https://docs.kore.ai/agent-platform/index
+  baseURL: https://agents.kore.ai
+  tags:
+  - Conversational AI
+  - Agents
+  - Streaming
+  properties:
+  - type: OpenAPI
+    url: openapi/koreai-abl-runtime-conversation-openapi.json
+  - type: Overlay
+    url: overlays/koreai-abl-runtime-conversation-overlay.yaml
+- name: Kore.ai Agent Platform ABL Runtime API — Workflows
+  description: >-
+    Invoke and execute deployed Kore.ai Agent Platform workflows, execute a pinned workflow
+    version, and poll asynchronous workflow execution status.
+  humanURL: https://docs.kore.ai/agent-platform/workflows
+  baseURL: https://agents.kore.ai
+  tags:
+  - Workflows
+  - Automation
+  - Agents
+  properties:
+  - type: OpenAPI
+    url: openapi/koreai-abl-runtime-workflows-openapi.json
+  - type: Overlay
+    url: overlays/koreai-abl-runtime-workflows-overlay.yaml
+- name: Kore.ai Agent Platform ABL Runtime API — Sessions
+  description: >-
+    Read usage metrics for a Kore.ai Agent Platform project, with optional date range and
+    grouping.
+  humanURL: https://docs.kore.ai/agent-platform/runtime
+  baseURL: https://agents.kore.ai
+  tags:
+  - Analytics
+  - Sessions
+  properties:
+  - type: OpenAPI
+    url: openapi/koreai-abl-runtime-sessions-openapi.json
+  - type: Overlay
+    url: overlays/koreai-abl-runtime-sessions-overlay.yaml
+- name: Kore.ai AI for Service Platform APIs
+  description: >-
+    The AI for Service REST estate — Automation AI (bot lifecycle, NLP training, analytics,
+    admin, data tables), Search AI (answer generation, content and chunk management,
+    ingestion, connectors), Contact Center AI (agents, queues, skills, campaigns, voice
+    gateway, WFM), Agent AI (conversation data, transcription control, post-conversation
+    hooks), Quality AI (raw data, Auto QA scoring) and Case Management. Authenticated with a
+    JWT minted from a JWT App and governed by assigned Platform and Admin Console API
+    scopes. Documented as prose reference pages; no machine-readable contract is published
+    for this estate.
+  humanURL: https://docs.kore.ai/ai-for-service/apis/api-list
+  baseURL: https://platform.kore.ai
+  tags:
+  - Contact Center
+  - Customer Experience
+  - Automation
+  - Search
+  - Quality
+  properties:
+  - type: APIReference
+    url: https://docs.kore.ai/ai-for-service/apis/api-list
+  - type: GettingStarted
+    url: https://docs.kore.ai/ai-for-service/apis/automation/api-introduction
+  - type: RateLimits
+    url: rate-limits/koreai-rate-limits.yml
+  - type: Postman
+    url: https://github.com/Koredotcom/Public-APIs
+- name: Kore.ai Arch MCP Server
+  description: >-
+    A stdio Model Context Protocol server, @koreai/arch-mcp-tools, that exposes the Kore.ai
+    Agent Platform control plane to an MCP client as 45 tools across build, evaluate,
+    optimize, debug and analyze. Installed locally with npx; there is no hosted remote
+    endpoint.
+  humanURL: https://docs.kore.ai/agent-platform/mcp-server
+  baseURL: https://agents.kore.ai
+  tags:
+  - Model Context Protocol
+  - Agents
+  - Developer Tools
+  properties:
+  - type: MCPServer
+    url: mcp/koreai-mcp.yml
+  - type: ToolCrosswalk
+    url: mcp/koreai-tool-crosswalk.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -20,4 +138,74 @@ maintainers:
   email: info@apis.io
 common:
 - type: Website
-  url: https://forgeglobal.com/koreai_stock/
+  url: https://www.kore.ai/
+- type: DeveloperPortal
+  url: https://developer.kore.ai/
+- type: Documentation
+  url: https://docs.kore.ai/
+- type: APIReference
+  url: https://docs.kore.ai/ai-for-service/apis/api-list
+- type: GettingStarted
+  url: https://docs.kore.ai/agent-platform/getting-started
+- type: Support
+  url: https://www.kore.ai/support
+- type: Blog
+  url: https://www.kore.ai/blog
+- type: GitHubOrganization
+  url: https://github.com/Koredotcom
+- type: SignUp
+  url: https://agents.kore.ai/auth/login
+- type: TermsOfService
+  url: https://www.kore.ai/terms-of-service
+- type: PrivacyPolicy
+  url: https://www.kore.ai/privacy-policy
+- type: Postman
+  url: https://github.com/Koredotcom/Public-APIs
+- type: StatusPage
+  url: https://status.kore.com/
+- type: Compliance
+  url: https://trust.kore.ai/
+- type: TrustCenter
+  url: security/koreai-trust-center.yml
+- type: Lifecycle
+  url: lifecycle/koreai-lifecycle.yml
+- type: Deprecation
+  url: https://docs.kore.ai/ai-for-service/release-notes/deprecations
+- type: ChangeLog
+  url: changelog/koreai-changelog.yml
+- type: Packages
+  url: packages/koreai-packages.yml
+- type: SDKs
+  url: packages/koreai-packages.yml
+- type: MCPServer
+  url: mcp/koreai-mcp.yml
+- type: ToolCrosswalk
+  url: mcp/koreai-tool-crosswalk.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: LLMsTxt
+  url: llms/koreai-llms.txt
+- type: Authentication
+  url: authentication/koreai-authentication.yml
+- type: Conventions
+  url: conventions/koreai-conventions.yml
+- type: Idempotency
+  url: conventions/koreai-conventions.yml
+- type: ErrorCatalog
+  url: errors/koreai-problem-types.yml
+- type: RateLimits
+  url: rate-limits/koreai-rate-limits.yml
+- type: Plans
+  url: plans/koreai-plans-pricing.yml
+- type: Conformance
+  url: conformance/koreai-conformance.yml
+- type: DomainSecurity
+  url: security/koreai-domain-security.yml
+- type: Webhooks
+  url: asyncapi/koreai-webhooks.yml
+- type: Components
+  url: components/koreai-components.yml
+- type: DataModel
+  url: data-model/koreai-data-model.yml
+- type: Sandbox
+  url: sandbox/koreai-sandbox.yml

@@ -1,0 +1,69 @@
+generated: '2026-08-23'
+method: searched
+source: https://docs.kore.ai/ai-for-service/apis/rate-limit
+docs: https://docs.kore.ai/ai-for-service/apis/rate-limit
+limit_count: 6
+note: >-
+  Kore.ai publishes a real rate-limit matrix for the AI for Service estate with named
+  enforcement levels and numeric limits. What it does NOT publish is the runtime signal:
+  no X-RateLimit-*/RateLimit-* response headers and no Retry-After are documented
+  anywhere, and the docs describe exhaustion only as a human-readable error string. An
+  agent therefore cannot see how close it is to a limit — it can only discover the limit
+  by hitting it. The Agent Platform estate documents a 429 status and a RATE_LIMIT_EXCEEDED
+  / QUEUE_FULL error code but publishes no numbers at all.
+rate_limits:
+- scope: per-bot
+  product: Automation AI
+  window: 60s and 1h (rolling, both enforced simultaneously)
+  limit: 60 per minute
+  secondary_limit: 1800 per hour
+  applies_to: Bot Definition APIs and NLP Training APIs and Analytics APIs
+  note: If the one-hour limit is breached, further requests are blocked even when the sixty-second budget is still available.
+- scope: per-request-id
+  product: Automation AI
+  window: 60s and 1h (rolling)
+  limit: 60 per minute
+  secondary_limit: 1800 per hour
+  applies_to: Bot Definition Status APIs and NLP Training Status APIs
+- scope: per-account
+  product: Automation AI
+  window: 60s and 1h (rolling)
+  limit: 60 per minute
+  secondary_limit: 1800 per hour
+  applies_to: Admin APIs
+- scope: per-bot
+  product: Automation AI
+  window: 60s and 1h (rolling)
+  limit: 600 per minute
+  secondary_limit: 18000 per hour
+  applies_to: Bot Definition Notification APIs (Proactive Notification, Proactive Notification Status)
+- scope: per-account-per-table
+  product: Automation AI
+  window: 60s and 1h (rolling)
+  limit: 600 per minute
+  secondary_limit: 18000 per hour
+  applies_to: Data / Data Table Access APIs (Insert, Insert Bulk, Update, Delete, Get Table Data, Get View Data)
+- scope: per-account
+  product: Contact Center AI and Quality AI
+  window: 60s
+  limit: 60 per minute
+  secondary_limit: null
+  applies_to: >-
+    Contact Center AI analytics, agent, skills, queue, WFM, hours-of-operation, voice
+    gateway and campaign APIs; Quality AI Raw Data and Auto QA Reporting APIs.
+response_signalling:
+  headers: []
+  headers_note: No rate-limit response headers are documented on any Kore.ai surface.
+  retry_after: false
+  status_on_exhaustion: 429
+  status_note: >-
+    429 with code RATE_LIMIT_EXCEEDED is documented for the Agent Platform estate. The
+    AI for Service docs give only the error strings "You've exceeded the per-minute rate
+    limit. Please wait for sometime before retrying." and "You've exceeded the hourly rate
+    limit. Please wait for sometime before retrying." without naming a status code.
+  concurrency: >-
+    The Agent Platform also returns 429 with code QUEUE_FULL when the execution queue is at
+    capacity, and supplies a retryAfterMs value in the error payload rather than a header.
+custom_limits:
+  available: true
+  how: Contact support for a higher or custom rolling rate limit.

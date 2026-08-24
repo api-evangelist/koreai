@@ -1,0 +1,55 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Kore.ai ABL Runtime API (sessions)
+  version: 1.0.0
+extends: openapi/koreai-abl-runtime-sessions-openapi.json
+x-provenance:
+  generated: '2026-08-23'
+  method: generated
+  source: openapi/koreai-abl-runtime-sessions-openapi.json
+  note: >-
+    Enhancements API Evangelist observed but the harvested spec does not carry. The
+    harvested spec is never mutated. servers[] is absent from the provider's file; the
+    provider's own API reference states the base URL is https://agents.kore.ai and that
+    region-specific hosts exist.
+actions:
+- target: $.info
+  update:
+    x-apievangelist-provider: koreai
+    x-apievangelist-harvested: '2026-08-23'
+    x-apievangelist-source: https://raw.githubusercontent.com/Koredotcom/docs-v2/main/agent-platform/drafts/
+    x-apievangelist-note: >-
+      Published in the first-party docs repository under agent-platform/drafts/. Not yet
+      linked from the rendered docs navigation at docs.kore.ai.
+- target: $
+  update:
+    servers:
+    - url: https://agents.kore.ai
+      description: USA-Central (default). Region-specific hosts are listed at https://docs.kore.ai/agent-platform/getting-started#platform-access-and-allowlist-of-ips
+    - url: https://us-swift-agents.kore.ai
+      description: USA-Swift
+    - url: https://uk-agents.kore.ai
+      description: United Kingdom
+    - url: https://de-agents.kore.ai
+      description: Germany
+    - url: https://jp-agents.kore.ai
+      description: Japan
+    - url: https://au-agents.kore.ai
+      description: Australia
+    - url: https://sg-agents.kore.ai
+      description: Singapore
+    - url: https://uae-agents.kore.ai
+      description: United Arab Emirates
+    - url: https://ksa-agents.kore.ai
+      description: Kingdom of Saudi Arabia
+    - url: https://ind-agents.kore.ai
+      description: India
+- target: $.components.securitySchemes
+  update:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: >-
+        JWT bearer issued after login, or a long-lived API key prefixed abl_sk-. Documented
+        at the provider's API reference; the harvested file declares only the x-api-key
+        apiKey scheme.

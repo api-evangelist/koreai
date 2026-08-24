@@ -1,0 +1,62 @@
+generated: '2026-08-23'
+method: searched
+source: https://docs.kore.ai/agent-platform/testing
+note: >-
+  Kore.ai publishes NO public sandbox in the payments sense — there are no test API keys,
+  no test-vs-live key prefixes, no magic identifiers, no hosted test tokens and no time
+  simulation. What it does publish is a substantial IN-PRODUCT rehearsal layer behind the
+  login wall: a Studio test console, a scripted evaluation harness, a debug/trace surface,
+  and package validation with an import preview. All of it requires an authenticated
+  workspace, so an unauthenticated consumer cannot exercise the API at all before signing
+  up. No test values are recorded here because the provider publishes none.
+public_sandbox: false
+test_credentials_published: false
+key_prefixes:
+  note: >-
+    Key prefixes exist but denote SCOPE, not test-vs-live — abl_ (long-lived API key),
+    ak_ (service-to-service), pk_ (origin-restricted public widget key), sdk_ (short-lived
+    SDK session token). There is no test-mode prefix.
+environments:
+  model: named-environment-segment
+  note: >-
+    Runtime routes carry an {env} path segment
+    (/api/v1/project/{projectSlug}/{env}/agent/{agentSlug}/chat), so a project can be
+    exercised in a non-production environment, and deployments are typed and promotable
+    between them. The environment names are customer-defined, not a fixed sandbox/live pair.
+facilities:
+- name: Studio test console
+  description: Interactive testing of agents from within the platform UI.
+  docs: https://docs.kore.ai/agent-platform/testing
+  access: authenticated workspace
+- name: Evaluations
+  description: >-
+    Generate eval personas and scenarios, define evaluators, assemble eval sets and run them
+    with preflight, per-case results and heatmaps. Drivable from the UI or over MCP.
+  docs: https://docs.kore.ai/agent-platform/evals
+  mcp_tools: [platform_eval_personas, platform_eval_scenarios, platform_eval_evaluators, platform_eval_sets, platform_eval_runs]
+- name: Debug sessions
+  description: >-
+    Load an agent into a debug session, send messages, inspect gather progress and flow
+    state, search traces, view the span tree and ask the platform to explain a decision.
+  docs: https://docs.kore.ai/agent-platform/runtime
+  mcp_tools: [debug_load_agent, debug_send_message, debug_get_current_state, debug_traces, debug_get_span_tree, debug_explain_decision]
+- name: Package validation with import preview
+  description: Validate a local package before importing it and preview what the import would change.
+  mcp_tools: [platform_validate_package, platform_package_model]
+- name: Batch and conversation test suites (AI for Service)
+  description: >-
+    The older estate ships importable/exportable batch test suites and conversation test
+    suites with asynchronous execution-status APIs.
+  docs: https://docs.kore.ai/ai-for-service/apis/automation/api-list
+signup:
+  free_signup_claimed: true
+  claim_source: https://docs.kore.ai/agent-platform/getting-started
+  claim_text: 'Agent Platform Account — Sign up for free using your region-specific URL.'
+  probed_url: https://agents.kore.ai/signup
+  probed_status: 200
+  probed_note: Redirects to https://agents.kore.ai/auth/login; the signup form itself is behind that wall.
+ip_allowlisting:
+  note: >-
+    The platform sends requests from a fixed set of region-specific egress IPs, published so
+    customers can allowlist them. That list is at
+    https://docs.kore.ai/agent-platform/getting-started#platform-access-and-allowlist-of-ips

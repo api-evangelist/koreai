@@ -1,0 +1,120 @@
+generated: '2026-08-23'
+method: searched
+status: published
+source: https://docs.kore.ai/agent-platform/mcp-server + https://docs.kore.ai/agent-platform/use-mcp-server
+tool_source: >-
+  Tool names were read from the published package's own registry
+  (dist/src/tools/index.js in @koreai/arch-mcp-tools@1.5.0, downloaded from
+  registry.npmjs.org on 2026-08-23), not inferred from prose. Descriptions come from the
+  provider's own tool tables at docs.kore.ai/agent-platform/use-mcp-server.
+deployment:
+  mode: local-stdio
+  endpoint: null
+  install: npx -y @koreai/arch-mcp-tools
+  package: https://www.npmjs.com/package/@koreai/arch-mcp-tools
+  auth: oauth
+  verified: probed
+  note: >-
+    There is NO remote/hosted MCP endpoint. Kore.ai ships a stdio server a human must
+    install locally; an agent cannot reach Kore.ai over MCP without that install. Auth is
+    handled inside the server by platform_connect, which tries an explicit authToken, the
+    encrypted credential store shared with `kore-platform-cli login`, then a browser
+    device-authorization flow. The environment is selected with the AGENTS_URL variable
+    (default region https://agents.kore.ai).
+server:
+  name: arch-agent-platform
+  transport: stdio
+  command: npx
+  args:
+  - -y
+  - '@koreai/arch-mcp-tools'
+  version: 1.5.0
+  version_published: '2026-08-20'
+  license: MIT
+  repository: https://github.com/Koredotcom/agents-mcp-tools
+  pinned_install_example: '@koreai/arch-mcp-tools@1.5.0'
+  env:
+  - name: AGENTS_URL
+    required: false
+    description: Region-specific Agent Platform URL to pin (for example https://agents.kore.ai).
+  resources:
+  - uri: arch://guidance/v1/manifest
+    description: Operation/dependency catalog the packaged Agent Skill requires (schemaVersion "1") before catalog-driven planning.
+  prompts:
+  - name: plan-platform-operation
+    description: Plan a new multi-feature Agent Platform task.
+  - name: verify-platform-operation
+    description: Verify a specific action after it was executed.
+  clients_documented:
+  - Claude Code
+  - Codex CLI
+  - Cursor
+  - VS Code (GitHub Copilot)
+safety_model:
+  note: >-
+    The provider documents an explicit write-safety taxonomy for its tools —
+    read, write, idempotent_write, grant_gated_write, destructive_write — and states that
+    grant-gated and destructive operations require an attempt-bound grant returned by
+    Studio. Credential-bearing auth profiles cannot be created over MCP:
+    platform_auth_profiles(create) only accepts authType "none" and otherwise returns a
+    secureSetupRequired handoff, because secrets must never enter MCP or model context.
+tool_count: 45
+tools:
+- {name: platform_connect, group: debug, description: Connect and authenticate to the platform}
+- {name: platform_projects, group: build, description: 'Manage projects (list, get, create, update, delete)'}
+- {name: platform_workflows, group: build, description: Create, update, publish, execute, and expose workflows as tools}
+- {name: platform_auth_profiles, group: build, description: Manage profile metadata and start secure OAuth flows}
+- {name: platform_integrations, group: build, description: Create, update, test, and remove connector connections}
+- {name: platform_mcp_servers, group: build, description: Provision MCP servers; discover, import, and test tools}
+- {name: platform_agents, group: build, description: 'Manage agents (list, get, save_dsl)'}
+- {name: platform_versions, group: build, description: 'Manage immutable versions (list, get, publish, qualifications, audit, diff)'}
+- {name: platform_deployments, group: build, description: 'Manage typed deployments (list, get, create, promote, rollback, restore, retire)'}
+- {name: platform_sdk_channels, group: build, description: Create SDK keys and web, mobile, and API channels}
+- {name: platform_tools, group: build, description: 'Manage tools (list, get, create, update, delete, test)'}
+- {name: platform_import_export, group: build, description: Import and export projects}
+- {name: platform_config, group: build, description: Manage project and LLM configuration}
+- {name: platform_workspaces, group: build, description: List, switch, and inspect active workspaces}
+- {name: platform_arch_sop, group: build, description: Drive Studio Arch SOP-build sessions}
+- {name: platform_arch_auto_loop, group: build, description: Drive project-scoped Arch Auto Loop repair workflows}
+- {name: platform_project_builder, group: build, description: Discover provider contracts, inspect live dependencies and readiness, and plan}
+- {name: platform_project_builder_operations, group: build, description: Continue durable operations and execute attempt-bound governed actions}
+- {name: agent_tables, group: build, description: Manage Agent Tables definitions and project-scoped rows}
+- {name: platform_eval_personas, group: evaluate, description: Manage and generate eval personas}
+- {name: platform_eval_scenarios, group: evaluate, description: Manage and generate eval scenarios}
+- {name: platform_eval_evaluators, group: evaluate, description: Manage eval evaluators and templates}
+- {name: platform_eval_sets, group: evaluate, description: Manage eval sets}
+- {name: platform_eval_runs, group: evaluate, description: Manage eval runs, preflight, cases, and heatmaps}
+- {name: debug_harness_logs, group: evaluate, description: Get CI execution logs}
+- {name: platform_validate_package, group: optimize, description: Validate a local package and optional import preview}
+- {name: platform_package_model, group: optimize, description: Show compiler-visible agents, tools, constraints, refs, and diagnostics}
+- {name: debug_lint_abl, group: optimize, description: Run ABL repair and design lint checks}
+- {name: debug_why_transcript_failed, group: optimize, description: Correlate transcript symptoms with ABL file/line causes}
+- {name: debug_diagnose_transcript, group: optimize, description: Alias for transcript failure diagnosis}
+- {name: debug_list_agents, group: debug, description: List available agents by domain}
+- {name: debug_load_agent, group: debug, description: Load an agent and create a debug session}
+- {name: debug_send_message, group: debug, description: Send a message to an agent}
+- {name: debug_get_current_state, group: debug, description: Inspect agent context, gather progress, flow state}
+- {name: debug_traces, group: debug, description: 'Search trace events (type, text, agent, error)'}
+- {name: debug_session_history, group: debug, description: Page durable Runtime sessions and persisted traces}
+- {name: debug_get_span_tree, group: debug, description: View hierarchical execution flow}
+- {name: debug_explain_decision, group: debug, description: Explain agent decisions with context}
+- {name: debug_get_flow_graph, group: debug, description: 'View state machine graph (JSON or Mermaid)'}
+- {name: debug_get_errors, group: debug, description: Get errors, warnings, and escalations}
+- {name: debug_list_active_sessions, group: debug, description: List observable sessions}
+- {name: debug_session, group: debug, description: Subscribe/unsubscribe to session traces}
+- {name: debug_docs, group: analyze, description: Get or search ABL documentation}
+- {name: debug_diagnose, group: analyze, description: Diagnose agent config and execution issues}
+- {name: debug_analyze_session, group: analyze, description: Automated session diagnostics}
+x-evidence:
+  fetched: '2026-08-23'
+  docs_url: https://docs.kore.ai/agent-platform/mcp-server
+  docs_http_status: 200
+  npm_metadata_url: https://registry.npmjs.org/@koreai/arch-mcp-tools
+  npm_latest: 1.5.0
+  npm_published: '2026-08-20T05:43:55.125Z'
+  live_tools_list: not-obtainable-anonymously
+  live_tools_list_note: >-
+    tools/list could not be executed against a running server without installing the
+    package's runtime dependencies and completing an authenticated platform_connect, so
+    per-tool inputSchema is not captured here. Tool NAMES are exact — read from the
+    package's own tool registry file.

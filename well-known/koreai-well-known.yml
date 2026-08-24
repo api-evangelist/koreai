@@ -1,0 +1,148 @@
+generated: '2026-08-23'
+method: probed
+source: direct HTTP probes on every Kore.ai host named in apis.yml, 2026-08-23
+note: >-
+  NO HIT. Every /.well-known/ path was probed on all five Kore.ai hosts and nothing
+  real was served. agents.kore.ai answers HTTP 200 with a ~1.45 MB text/html SPA shell
+  for /.well-known/openid-configuration, /.well-known/oauth-authorization-server,
+  /.well-known/oauth-protected-resource and /.well-known/api-catalog — a single-page-app
+  catch-all, not a document (its 404 responses are the same HTML at ~1.449 MB, a 5 KB
+  delta). platform.kore.ai and bots.kore.ai return 403 for every path from a bot-filtered
+  edge. www.kore.ai and docs.kore.ai return real 404s. No WellKnown and no SecurityTxt
+  pointer is emitted from this file.
+hit_count: 0
+soft_404_control:
+  host: https://agents.kore.ai
+  path: /.well-known/kin-score-negative-control-does-not-exist
+  status: 200
+  bytes: 1454167
+  observation: >-
+    A path that cannot exist returns HTTP 200 with a byte-for-byte identical response
+    (1454167 bytes of text/html) to the four /.well-known/* paths that "succeeded".
+    That proves the 200s are a single-page-app catch-all and not served documents.
+hosts:
+- host: https://agents.kore.ai
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    file: null
+  - path: /.well-known/openid-configuration
+    status: 200
+    file: null
+    note: HTML SPA shell (text/html, 1454167 bytes) — catch-all 200, not a document.
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    file: null
+    note: HTML SPA shell (text/html, 1454167 bytes) — catch-all 200, not a document.
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    file: null
+    note: HTML SPA shell (text/html, 1454167 bytes) — catch-all 200, not a document.
+  - path: /.well-known/api-catalog
+    status: 200
+    file: null
+    note: HTML SPA shell (text/html, 1454167 bytes) — catch-all 200, not a document.
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    file: null
+  - path: /.well-known/agent-card.json
+    status: 404
+    file: null
+  - path: /.well-known/agent.json
+    status: 404
+    file: null
+- host: https://platform.kore.ai
+  documents:
+  - path: /.well-known/security.txt
+    status: 403
+    file: null
+  - path: /.well-known/openid-configuration
+    status: 403
+    file: null
+  - path: /.well-known/oauth-authorization-server
+    status: 403
+    file: null
+  - path: /.well-known/oauth-protected-resource
+    status: 403
+    file: null
+  - path: /.well-known/api-catalog
+    status: 403
+    file: null
+  - path: /.well-known/ai-plugin.json
+    status: 403
+    file: null
+  - path: /.well-known/agent-card.json
+    status: 403
+    file: null
+  - path: /.well-known/agent.json
+    status: 403
+    file: null
+- host: https://bots.kore.ai
+  documents:
+  - path: /.well-known/security.txt
+    status: 403
+    file: null
+  - path: /.well-known/openid-configuration
+    status: 403
+    file: null
+  - path: /.well-known/oauth-authorization-server
+    status: 403
+    file: null
+  - path: /.well-known/api-catalog
+    status: 403
+    file: null
+  - path: /.well-known/agent-card.json
+    status: 403
+    file: null
+  - path: /.well-known/agent.json
+    status: 403
+    file: null
+- host: https://www.kore.ai
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    file: null
+  - path: /.well-known/openid-configuration
+    status: 404
+    file: null
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    file: null
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+    file: null
+  - path: /.well-known/api-catalog
+    status: 404
+    file: null
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    file: null
+  - path: /.well-known/agent-card.json
+    status: 404
+    file: null
+  - path: /.well-known/agent.json
+    status: 404
+    file: null
+- host: https://docs.kore.ai
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    file: null
+  - path: /.well-known/openid-configuration
+    status: 404
+    file: null
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    file: null
+  - path: /.well-known/api-catalog
+    status: 404
+    file: null
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    file: null
+  - path: /.well-known/agent-card.json
+    status: 404
+    file: null
+  - path: /.well-known/agent.json
+    status: 404
+    file: null

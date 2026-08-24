@@ -1,0 +1,119 @@
+generated: '2026-08-23'
+method: searched
+source: https://registry.npmjs.org (npm registry metadata) + https://github.com/Koredotcom + https://docs.kore.ai/agent-platform/sdks
+note: >-
+  Kore.ai publishes first-party client libraries under the npm `@koreai` scope plus
+  unscoped legacy names, and ships mobile SDKs as source on the Koredotcom GitHub org
+  rather than through Maven Central / CocoaPods. Every npm `version:`/`published:`
+  below was read from registry.npmjs.org on 2026-08-23. The mobile SDKs have no
+  package-registry coordinate we could find, so they carry `registry: github` and
+  `version: null` with the last push date recorded in the note.
+packages:
+- language: javascript
+  registry: npm
+  name: '@koreai/arch-mcp-tools'
+  url: https://www.npmjs.com/package/@koreai/arch-mcp-tools
+  install: npx -y @koreai/arch-mcp-tools
+  official: true
+  version: 1.5.0
+  published: '2026-08-20'
+  repository: https://github.com/Koredotcom/agents-mcp-tools
+  note: Arch MCP server (stdio) for the Kore.ai Agent Platform. Also ships a packaged Agent Skill at skills/arch-platform/SKILL.md.
+- language: javascript
+  registry: npm
+  name: kore-web-sdk
+  url: https://www.npmjs.com/package/kore-web-sdk
+  install: npm install kore-web-sdk
+  official: true
+  version: 11.27.1
+  published: '2026-08-10'
+  repository: https://github.com/Koredotcom/web-kore-sdk
+  note: Kore.ai Web SDK for embedding conversational agents in a browser.
+- language: javascript
+  registry: npm
+  name: '@koreai/artemis-web-sdk'
+  url: https://www.npmjs.com/package/@koreai/artemis-web-sdk
+  install: npm install @koreai/artemis-web-sdk
+  official: true
+  version: 1.1.0
+  published: '2026-08-03'
+  note: Embeddable Web SDK for voice and chat interactions with Agent Platform (Artemis) agents.
+- language: javascript
+  registry: npm
+  name: '@koreai/agentai-web-sdk'
+  url: https://www.npmjs.com/package/@koreai/agentai-web-sdk
+  install: npm install @koreai/agentai-web-sdk
+  official: true
+  version: 11.27.0
+  published: '2026-07-29'
+  note: Agent AI (agent-assist) Web SDK.
+- language: javascript
+  registry: npm
+  name: '@koreai/agentai-sdk'
+  url: https://www.npmjs.com/package/@koreai/agentai-sdk
+  install: npm install @koreai/agentai-sdk
+  official: true
+  version: 1.0.1
+  published: '2026-03-06'
+  note: Universal JavaScript AgentAI SDK for Node.js and browser.
+- language: swift
+  registry: github
+  name: iOS-kore-sdk
+  url: https://github.com/Koredotcom/iOS-kore-sdk
+  install: Clone or add as a Swift package from the GitHub repository
+  official: true
+  version: null
+  published: null
+  note: >-
+    iOS SDK distributed as source on GitHub; no CocoaPods/SwiftPM registry coordinate
+    was found, so there is no metadata endpoint to read a version from. Repository last
+    pushed 2026-08-19.
+- language: java
+  registry: github
+  name: android-kore-sdk
+  url: https://github.com/Koredotcom/android-kore-sdk
+  install: Clone or add as a Gradle module from the GitHub repository
+  official: true
+  version: null
+  published: null
+  note: >-
+    Android SDK distributed as source on GitHub; not published to Maven Central under a
+    Kore.ai coordinate we could locate. Repository last pushed 2026-08-14.
+- language: javascript
+  registry: github
+  name: react-native-botsdk
+  url: https://github.com/Koredotcom/react-native-botsdk
+  install: Add the GitHub repository as a React Native dependency
+  official: true
+  version: null
+  published: null
+  note: >-
+    React Native Bot SDK. Published to npm only under helper packages
+    (rn-kore-bot-socket-lib*), not as a single first-party coordinate. Repository last
+    pushed 2026-03-30.
+- language: javascript
+  registry: github
+  name: BotKit
+  url: https://github.com/Koredotcom/BotKit
+  install: Clone the GitHub repository
+  official: true
+  version: null
+  published: null
+  note: >-
+    Node.js BotKit SDK for intercepting and handling agent conversation events. Source
+    only; no registry coordinate. Repository last pushed 2026-08-07.
+- language: typescript
+  registry: npm
+  name: '@koreai/amp-sdk'
+  url: https://github.com/Koredotcom/amp-sdk
+  install: null
+  official: true
+  version: null
+  published: null
+  note: >-
+    Agent Management Platform trace-ingestion SDK. Present on the Koredotcom GitHub org
+    (last pushed 2026-04-08); no matching published npm package was found on
+    registry.npmjs.org, so version is honestly null rather than guessed.
+observations:
+- No PyPI, RubyGems, crates.io, Packagist, NuGet or pkg.go.dev first-party package was found; pypi.org/pypi/koreai and pypi.org/pypi/kore-ai both return 404.
+- '@koredev/* npm packages (artemis-platform-cli, kore-web-sdk, agentai-web-sdk, artemis-web-sdk) are Kore pre-release channels carrying -rc versions; they are not documented for consumers and are excluded from official: true.'
