@@ -41,62 +41,14 @@ tags:
 - Model Context Protocol
 - Enterprise Software
 apis:
-- name: Kore.ai Agent Platform ABL Runtime API — Conversation
-  description: >-
-    Deployment-scoped conversation operations for agents built on the Kore.ai Agent
-    Platform: send a message to a deployed agent, run a one-shot completion, and stream an
-    agent response over Server-Sent Events. Also carries four deprecated legacy chat
-    operations retained for migration.
-  humanURL: https://docs.kore.ai/agent-platform/index
-  baseURL: https://agents.kore.ai
-  tags:
-  - Conversational AI
-  - Agents
-  - Streaming
-  properties:
-  - type: OpenAPI
-    url: openapi/koreai-abl-runtime-conversation-openapi.json
-  - type: Overlay
-    url: overlays/koreai-abl-runtime-conversation-overlay.yaml
-- name: Kore.ai Agent Platform ABL Runtime API — Workflows
-  description: >-
-    Invoke and execute deployed Kore.ai Agent Platform workflows, execute a pinned workflow
-    version, and poll asynchronous workflow execution status.
-  humanURL: https://docs.kore.ai/agent-platform/workflows
-  baseURL: https://agents.kore.ai
-  tags:
-  - Workflows
-  - Automation
-  - Agents
-  properties:
-  - type: OpenAPI
-    url: openapi/koreai-abl-runtime-workflows-openapi.json
-  - type: Overlay
-    url: overlays/koreai-abl-runtime-workflows-overlay.yaml
-- name: Kore.ai Agent Platform ABL Runtime API — Sessions
-  description: >-
-    Read usage metrics for a Kore.ai Agent Platform project, with optional date range and
-    grouping.
-  humanURL: https://docs.kore.ai/agent-platform/runtime
-  baseURL: https://agents.kore.ai
-  tags:
-  - Analytics
-  - Sessions
-  properties:
-  - type: OpenAPI
-    url: openapi/koreai-abl-runtime-sessions-openapi.json
-  - type: Overlay
-    url: overlays/koreai-abl-runtime-sessions-overlay.yaml
 - name: Kore.ai AI for Service Platform APIs
   description: >-
-    The AI for Service REST estate — Automation AI (bot lifecycle, NLP training, analytics,
-    admin, data tables), Search AI (answer generation, content and chunk management,
-    ingestion, connectors), Contact Center AI (agents, queues, skills, campaigns, voice
-    gateway, WFM), Agent AI (conversation data, transcription control, post-conversation
-    hooks), Quality AI (raw data, Auto QA scoring) and Case Management. Authenticated with a
-    JWT minted from a JWT App and governed by assigned Platform and Admin Console API
-    scopes. Documented as prose reference pages; no machine-readable contract is published
-    for this estate.
+    The AI for Service REST estate — Automation AI (bot lifecycle, NLP training, analytics, admin, data
+    tables), Search AI (answer generation, content and chunk management, ingestion, connectors), Contact
+    Center AI (agents, queues, skills, campaigns, voice gateway, WFM), Agent AI (conversation data, transcription
+    control, post-conversation hooks), Quality AI (raw data, Auto QA scoring) and Case Management. Authenticated
+    with a JWT minted from a JWT App and governed by assigned Platform and Admin Console API scopes. Documented
+    as prose reference pages; no machine-readable contract is published for this estate.
   humanURL: https://docs.kore.ai/ai-for-service/apis/api-list
   baseURL: https://platform.kore.ai
   tags:
@@ -116,10 +68,9 @@ apis:
     url: https://github.com/Koredotcom/Public-APIs
 - name: Kore.ai Arch MCP Server
   description: >-
-    A stdio Model Context Protocol server, @koreai/arch-mcp-tools, that exposes the Kore.ai
-    Agent Platform control plane to an MCP client as 45 tools across build, evaluate,
-    optimize, debug and analyze. Installed locally with npx; there is no hosted remote
-    endpoint.
+    A stdio Model Context Protocol server, @koreai/arch-mcp-tools, that exposes the Kore.ai Agent Platform
+    control plane to an MCP client as 45 tools across build, evaluate, optimize, debug and analyze. Installed
+    locally with npx; there is no hosted remote endpoint.
   humanURL: https://docs.kore.ai/agent-platform/mcp-server
   baseURL: https://agents.kore.ai
   tags:
@@ -131,12 +82,48 @@ apis:
     url: mcp/koreai-mcp.yml
   - type: ToolCrosswalk
     url: mcp/koreai-tool-crosswalk.yml
+- aid: koreai:koreai-chat-api
+  name: Kore.ai Chat API
+  description: The Chat API from Kore.ai — 5 operation(s) for chat.
+  humanURL: https://docs.kore.ai/agent-platform/index
+  baseURL: https://agents.kore.ai
+  tags:
+  - Chat
+  properties:
+  - type: OpenAPI
+    url: openapi/koreai-chat-api-openapi.yml
+- aid: koreai:koreai-conversation-api
+  name: Kore.ai Conversation API
+  description: The Conversation API from Kore.ai — 3 operation(s) for conversation.
+  humanURL: https://docs.kore.ai/agent-platform/index
+  baseURL: https://agents.kore.ai
+  tags:
+  - Conversation
+  properties:
+  - type: OpenAPI
+    url: openapi/koreai-conversation-api-openapi.yml
+- aid: koreai:koreai-workflows-api
+  name: Kore.ai Workflows API
+  description: The Workflows API from Kore.ai — 4 operation(s) for workflows.
+  humanURL: https://docs.kore.ai/agent-platform/index
+  baseURL: https://agents.kore.ai
+  tags:
+  - Workflows
+  properties:
+  - type: OpenAPI
+    url: openapi/koreai-workflows-api-openapi.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: Overlay
+  url: overlays/koreai-abl-runtime-conversation-overlay.yaml
+- type: Overlay
+  url: overlays/koreai-abl-runtime-workflows-overlay.yaml
+- type: Overlay
+  url: overlays/koreai-abl-runtime-sessions-overlay.yaml
 - type: Website
   url: https://www.kore.ai/
 - type: DeveloperPortal
