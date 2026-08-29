@@ -15,6 +15,18 @@ description: >-
   is recognized as a Leader in the Gartner Magic Quadrant for Conversational AI, the
   Forrester Wave for Conversational AI Platforms and the Everest Group PEAK Matrix for
   Agentic AI Products.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: false
+  label: Hosted service · you call their endpoint
+  confidence: medium
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 image: https://cdn.prod.website-files.com/6717a0dfaf71071a80dfce8b/68c807cb7a0e90c787610ed0_Kore.ai%20OG%20Image.jpg
 url: https://raw.githubusercontent.com/api-evangelist/koreai/refs/heads/main/apis.yml
 x-type: company
