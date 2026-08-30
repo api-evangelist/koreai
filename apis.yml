@@ -50,6 +50,19 @@ tags:
 - Employee Experience
 - Voice
 - Automation
+- MCP
+- Enterprise Software
+tags_raw:
+- Company
+- Artificial Intelligence
+- Conversational AI
+- Agents
+- Agent Platform
+- Contact Center
+- Customer Experience
+- Employee Experience
+- Voice
+- Automation
 - Model Context Protocol
 - Enterprise Software
 apis:
@@ -86,6 +99,10 @@ apis:
   humanURL: https://docs.kore.ai/agent-platform/mcp-server
   baseURL: https://agents.kore.ai
   tags:
+  - MCP
+  - Agents
+  - Developer Tools
+  tags_raw:
   - Model Context Protocol
   - Agents
   - Developer Tools
