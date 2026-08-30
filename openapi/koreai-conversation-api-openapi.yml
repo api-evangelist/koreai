@@ -1,0 +1,305 @@
+openapi: 3.2.0
+info:
+  description: Runtime API for workflow/chat/deployment/session execution.
+  title: ABL Runtime API - public/ Conversation API
+  version: 1.0.0
+  x-generated: 'do not edit; source: route contracts'
+tags:
+- name: Conversation
+paths:
+  /api/v1/project/{projectSlug}/{env}/agent/{agentSlug}/chat:
+    post:
+      description: Deployment-scoped agent chat. Creates a session on first call or continues one via sessionId. Project and agent are resolved from the URL.
+      operationId: runtime.agent.chat
+      parameters:
+      - description: Project slug
+        in: path
+        name: projectSlug
+        required: true
+        schema:
+          description: Project slug
+          type: string
+      - description: Environment tier
+        in: path
+        name: env
+        required: true
+        schema:
+          description: Environment tier
+          enum:
+          - dev
+          - staging
+          - production
+          type: string
+      - description: Deployed agent slug
+        in: path
+        name: agentSlug
+        required: true
+        schema:
+          description: Deployed agent slug
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                attachmentIds:
+                  description: Attachment ids to include
+                  items:
+                    type: string
+                  type: array
+                message:
+                  description: User message text
+                  type: string
+                metadata:
+                  additionalProperties: {}
+                  type: object
+                sessionId:
+                  description: Existing session id to continue the conversation
+                  type: string
+              required:
+              - message
+              type: object
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  action:
+                    additionalProperties: {}
+                    type: object
+                  outcome:
+                    type: string
+                  response:
+                    type: string
+                  sessionId:
+                    type: string
+                required:
+                - sessionId
+                - response
+                type: object
+          description: Success
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Internal server error
+      security:
+      - ApiKeyAuth: []
+      summary: Send a message to a deployed agent
+      tags:
+      - Conversation
+  /api/v1/project/{projectSlug}/{env}/agent/{agentSlug}/complete:
+    post:
+      description: Single-turn LLM completion against the deployed agent model.
+      operationId: runtime.agent.complete
+      parameters:
+      - description: Project slug
+        in: path
+        name: projectSlug
+        required: true
+        schema:
+          description: Project slug
+          type: string
+      - description: Environment tier
+        in: path
+        name: env
+        required: true
+        schema:
+          description: Environment tier
+          enum:
+          - dev
+          - staging
+          - production
+          type: string
+      - description: Deployed agent slug
+        in: path
+        name: agentSlug
+        required: true
+        schema:
+          description: Deployed agent slug
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                maxTokens:
+                  type: number
+                messages:
+                  description: Conversation messages
+                  items:
+                    properties:
+                      content:
+                        type: string
+                      role:
+                        enum:
+                        - system
+                        - user
+                        - assistant
+                        - tool
+                        type: string
+                    required:
+                    - role
+                    - content
+                    type: object
+                  type: array
+                modelId:
+                  type: string
+                temperature:
+                  type: number
+              required:
+              - messages
+              type: object
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  content:
+                    type: string
+                  finishReason:
+                    type: string
+                  latencyMs:
+                    type: number
+                  model:
+                    type: string
+                  usage:
+                    properties:
+                      estimatedCost:
+                        type:
+                        - number
+                        - 'null'
+                      inputTokens:
+                        type: number
+                      outputTokens:
+                        type: number
+                      totalTokens:
+                        type: number
+                    required:
+                    - inputTokens
+                    - outputTokens
+                    - totalTokens
+                    - estimatedCost
+                    type: object
+                required:
+                - content
+                - usage
+                - latencyMs
+                type: object
+          description: Success
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Internal server error
+      security:
+      - ApiKeyAuth: []
+      summary: One-shot completion via a deployed agent
+      tags:
+      - Conversation
+  /api/v1/project/{projectSlug}/{env}/agent/{agentSlug}/stream:
+    post:
+      description: Same as the chat route, streamed over Server-Sent Events (token deltas + trace events).
+      operationId: runtime.agent.stream
+      parameters:
+      - description: Project slug
+        in: path
+        name: projectSlug
+        required: true
+        schema:
+          description: Project slug
+          type: string
+      - description: Environment tier
+        in: path
+        name: env
+        required: true
+        schema:
+          description: Environment tier
+          enum:
+          - dev
+          - staging
+          - production
+          type: string
+      - description: Deployed agent slug
+        in: path
+        name: agentSlug
+        required: true
+        schema:
+          description: Deployed agent slug
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                attachmentIds:
+                  description: Attachment ids to include
+                  items:
+                    type: string
+                  type: array
+                message:
+                  description: User message text
+                  type: string
+                metadata:
+                  additionalProperties: {}
+                  type: object
+                sessionId:
+                  description: Existing session id to continue the conversation
+                  type: string
+              required:
+              - message
+              type: object
+      responses:
+        '200':
+          content:
+            text/event-stream:
+              schema:
+                type: string
+          description: Success
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Unauthorized
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: Internal server error
+      security:
+      - ApiKeyAuth: []
+      summary: Stream a deployed agent response (SSE)
+      tags:
+      - Conversation
+components:
+  schemas:
+    ErrorResponse:
+      properties:
+        error:
+          type: string
+      required:
+      - error
+      type: object
+  securitySchemes:
+    ApiKeyAuth:
+      in: header
+      name: x-api-key
+      type: apiKey
