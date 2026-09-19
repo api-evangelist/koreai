@@ -142,6 +142,8 @@ apis:
   humanURL: https://docs.kore.ai/agent-platform/index
   baseURL: https://agents.kore.ai
   tags:
+  - Conversations
+  tags_raw:
   - Conversation
   properties:
   - type: OpenAPI
