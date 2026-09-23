@@ -1,0 +1,33 @@
+{
+  "provider": "koreai",
+  "sources": [
+    "_original/koreai-abl-runtime-conversation-openapi.json",
+    "_original/koreai-abl-runtime-sessions-openapi.json",
+    "_original/koreai-abl-runtime-workflows-openapi.json"
+  ],
+  "outputs": [
+    "koreai-chat-api-openapi.yml",
+    "koreai-conversation-api-openapi.yml",
+    "koreai-workflows-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "sourced from openapi/_original/ (3 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "koreai-abl-runtime-conversation-openapi.json: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "koreai-abl-runtime-conversation-openapi.json: declared missing tag: Chat",
+    "koreai-abl-runtime-conversation-openapi.json: declared missing tag: Conversation",
+    "koreai-abl-runtime-sessions-openapi.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "koreai-abl-runtime-sessions-openapi.json: declared missing tag: Chat",
+    "koreai-abl-runtime-workflows-openapi.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "koreai-abl-runtime-workflows-openapi.json: declared missing tag: Workflows",
+    "tag 'Chat' spans 2 source specs (koreai-abl-runtime-conversation-openapi.json, koreai-abl-runtime-sessions-openapi.json): per-path servers applied",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "koreai-chat-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "koreai-conversation-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "koreai-workflows-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
+}
