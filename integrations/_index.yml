@@ -27,3 +27,16 @@
   relationship: distribution-channel
   status: not-a-workflow
   arazzo: null
+- slug: koreai-olo-own
+  label: Olo (own)
+  partner: olo
+  partner_name: Olo (own)
+  category: Voice
+  type: marketplace
+  marketplace: own
+  channel: partner-built
+  evidence: https://www.olo.com/partners/kore-ai
+  source: edge
+  relationship: platform-app
+  status: not-a-workflow
+  arazzo: null

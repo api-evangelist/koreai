@@ -3,6 +3,7 @@ method: searched
 checked:
 - https://aws.amazon.com/marketplace/
 - https://azuremarketplace.microsoft.com/
+- olo/integrations/olo-integration-edges.yml
 marketplace_apps: []
 edges:
 - partner_name: AWS Marketplace
@@ -75,3 +76,22 @@ edges:
   seller_name: Kore.ai Software India Private Limited
   detected_by: sweep-cloud-marketplaces.py
   detected: '2026-10-13'
+- partner_name: Olo (own)
+  partner: olo
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://www.olo.com/partners/kore-ai
+  mirror_of: olo/integrations/olo-integration-edges.yml
+  apps:
+  - Kore.ai
+  listing_count: 1
+  detected: '2026-10-14'
+  detected_by: mirror-platform-listings.py
+  category: Voice
+source:
+- olo/integrations/olo-integration-edges.yml
