@@ -64,5 +64,134 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Kore.ai is a company surfaced via the API Evangelist harvest backlog (source: secondary-market) and added to the network as a stub for full-pipeline profiling.
-- https://forgeglobal.com/koreai_stock/
+Kore.ai is an enterprise conversational and agentic AI platform used to build, deploy, govern and observe AI agents for customer experience and employee experience work — contact center automation, voice AI, IT and HR service desks, agent assist, quality assurance and no-code agent orchestration. The company ships two API estates. The newer Agent Platform ("Artemis") on agents.kore.ai exposes an ABL Runtime API for chat, streaming, workflow invocation and session usage, an Agent Blueprint Language (ABL) DSL, and a 45-tool stdio MCP server (@koreai/arch-mcp-tools) that turns the platform's own control plane into agent tooling. The longer-established AI for Service estate on platform.kore.ai exposes a large REST surface across Automation AI, Search AI, Contact Center AI, Agent AI, Quality AI and Case Management, authenticated with JWT apps and governed by an assigned API-scope model. Kore.ai is headquartered in Orlando, Florida and is recognized as a Leader in the Gartner Magic Quadrant for Conversational AI, the Forrester Wave for Conversational AI Platforms and the Everest Group PEAK Matrix for Agentic AI Products.
+
+**Areas:** Company · Artificial Intelligence · Conversational AI · Agents · Agent Platform · Contact Center · Customer Experience · Employee Experience · Voice · Automation · MCP · Enterprise Software
+
+## Kore.ai on APIs.io
+
+Everything profiled for Kore.ai is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/koreai/](https://apis.io/providers/koreai/)** — or go straight to one of the APIs or properties below.
+
+### APIs (5)
+
+- [Kore.ai AI for Service Platform APIs](https://apis.io/apis/koreai/koreai-ai-for-service-platform-apis/) — The AI for Service REST estate — Automation AI (bot lifecycle, NLP training, analytics, admin, data tables), Search AI (answer generation, content and chunk…
+- [Kore.ai Arch MCP Server](https://apis.io/apis/koreai/koreai-arch-mcp-server/) — A stdio Model Context Protocol server, @koreai/arch-mcp-tools, that exposes the Kore.ai Agent Platform control plane to an MCP client as 45 tools across…
+- [Kore.ai Chat API](https://apis.io/apis/koreai/koreai-chat-api/) — The Chat API from Kore.ai — 5 operation(s) for chat.
+- [Kore.ai Conversation API](https://apis.io/apis/koreai/koreai-conversation-api/) — The Conversation API from Kore.ai — 3 operation(s) for conversation.
+- [Kore.ai Workflows API](https://apis.io/apis/koreai/koreai-workflows-api/) — The Workflows API from Kore.ai — 4 operation(s) for workflows.
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### AsyncAPI (1)
+
+Event-driven and webhook contracts.
+
+- [Koreai Webhooks](https://apis.io/asyncapis/koreai/koreai-webhooks/)
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [arch-agent-platform](https://apis.io/servers/koreai/arch-agent-platform/)
+
+#### Overlays (3)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Koreai Abl Runtime Conversation Overlay](https://apis.io/overlays/koreai/koreai-abl-runtime-conversation-overlay/)
+- [Koreai Abl Runtime Sessions Overlay](https://apis.io/overlays/koreai/koreai-abl-runtime-sessions-overlay/)
+- [Koreai Abl Runtime Workflows Overlay](https://apis.io/overlays/koreai/koreai-abl-runtime-workflows-overlay/)
+
+#### Security (3)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Koreai Authentication](https://apis.io/security/koreai/koreai-authentication/)
+- [Koreai Domain Security](https://apis.io/security/koreai/koreai-domain-security/)
+- [Koreai Trust Center](https://apis.io/security/koreai/koreai-trust-center/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Koreai Plans Pricing](https://apis.io/plans/koreai/koreai-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Koreai Rate Limits](https://apis.io/rate-limits/koreai/koreai-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://www.kore.ai/)
+- [Documentation](https://docs.kore.ai/)
+- [Getting started](https://docs.kore.ai/agent-platform/getting-started)
+- [API reference](https://docs.kore.ai/ai-for-service/apis/api-list)
+- [Sign up](https://agents.kore.ai/auth/login)
+- [Support](https://www.kore.ai/support)
+- [Blog](https://www.kore.ai/blog)
+- [Compliance](https://trust.kore.ai/)
+- [Terms of service](https://www.kore.ai/terms-of-service)
+- [Privacy policy](https://www.kore.ai/privacy-policy)
+- [GitHub](https://github.com/Koredotcom)
+- [Status](https://status.kore.com/)
+
+## API Evangelist rating
+
+**Kin Score 54.4** — strong · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 76.7 |
+| Contract quality | 53.4 |
+| Contract governance | 18.2 |
+| Operational transparency | 50.0 |
+| Developer ergonomics | 83.3 |
+| Access clarity | 36.8 |
+
+**Agent readiness 39.6** — agent-native
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | documented (partial credit) |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | documented (partial credit) |
+| Error Semantics | verified |
+| OpenAPI Examples | — |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | yes |
+| Agent Skills | yes |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | na |
+| Operation Distinctiveness | distinct |
+
+**Regulatory alignment 27.3** — AI & Biometrics
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/koreai/](https://apis.io/providers/koreai/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Kore.ai: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/koreai/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
